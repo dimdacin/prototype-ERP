@@ -189,8 +189,8 @@
     "changeLanguage": "Schimbă limba",
     "description": "Descriere",
     "actions": "Acțiuni",
-    "na": "N/A",
-    "noData": "-"
+    "na": "Neaplicabil",
+    "noData": "Fără date"
   },
   "languages": {
     "fr": "Français",

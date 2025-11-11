@@ -189,8 +189,8 @@
     "changeLanguage": "Изменить язык",
     "description": "Описание",
     "actions": "Действия",
-    "na": "Н/Д",
-    "noData": "-"
+    "na": "Не применимо",
+    "noData": "Нет данных"
   },
   "languages": {
     "fr": "Français",

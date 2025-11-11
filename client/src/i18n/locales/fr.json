@@ -189,8 +189,8 @@
     "changeLanguage": "Changer de langue",
     "description": "Description",
     "actions": "Actions",
-    "na": "N/A",
-    "noData": "-"
+    "na": "Non applicable",
+    "noData": "Aucune donnée"
   },
   "languages": {
     "fr": "Français",

@@ -27,8 +27,8 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
       if (!selectedFile.name.endsWith('.xlsx') && !selectedFile.name.endsWith('.xls')) {
         toast({
           variant: "destructive",
-          title: "Format invalide",
-          description: "Veuillez sélectionner un fichier Excel (.xlsx ou .xls)"
+          title: t('equipements.invalidFormat'),
+          description: t('equipements.invalidFormatDescription')
         });
         return;
       }
@@ -56,15 +56,15 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || 'Erreur lors de l\'importation');
+        throw new Error(result.message || t('equipements.importError'));
       }
 
       setUploadStatus('success');
       setImportResult(result);
       
       toast({
-        title: "Importation réussie",
-        description: `${result.imported} équipement(s) importé(s) avec succès`
+        title: t('equipements.importationSuccess'),
+        description: `${result.imported} ${t('equipements.equipmentsImported')}`
       });
 
       // Refresh equipment list
@@ -82,8 +82,8 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
       setUploadStatus('error');
       toast({
         variant: "destructive",
-        title: "Erreur d'importation",
-        description: error instanceof Error ? error.message : "Une erreur est survenue"
+        title: t('equipements.importationError'),
+        description: error instanceof Error ? error.message : t('equipements.importError')
       });
     } finally {
       setIsUploading(false);
@@ -97,15 +97,15 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Importer depuis Excel</DialogTitle>
+          <DialogTitle>{t('equipements.importTitle')}</DialogTitle>
           <DialogDescription>
-            Sélectionnez votre fichier Excel standardisé contenant les données d'équipements
+            {t('equipements.importDescription')}
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="excel-file">Fichier Excel</Label>
+            <Label htmlFor="excel-file">{t('equipements.excelFile')}</Label>
             <Input
               id="excel-file"
               type="file"
@@ -116,7 +116,7 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
             />
             {file && (
               <p className="text-sm text-muted-foreground">
-                Fichier sélectionné: {file.name}
+                {t('equipements.fileSelected')}: {file.name}
               </p>
             )}
           </div>
@@ -127,11 +127,11 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
                 <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
                 <div className="flex-1 space-y-1">
                   <p className="text-sm font-medium text-green-600">
-                    {importResult.imported} équipement(s) importé(s)
+                    {importResult.imported} {t('equipements.equipmentsImported')}
                   </p>
                   {importResult.errors && importResult.errors.length > 0 && (
                     <div className="text-sm text-muted-foreground">
-                      <p className="font-medium">Erreurs :</p>
+                      <p className="font-medium">{t('equipements.errors')} :</p>
                       <ul className="list-disc list-inside">
                         {importResult.errors.map((error, idx) => (
                           <li key={idx}>{error}</li>
@@ -149,7 +149,7 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
                 <p className="text-sm text-red-600">
-                  Une erreur est survenue lors de l'importation
+                  {t('equipements.importError')}
                 </p>
               </div>
             </div>
@@ -165,12 +165,12 @@ export default function ImportEquipmentDialog({ children }: ImportEquipmentDialo
               {isUploading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Importation...
+                  {t('equipements.importing')}
                 </>
               ) : (
                 <>
                   <Upload className="h-4 w-4 mr-2" />
-                  Importer
+                  {t('equipements.import')}
                 </>
               )}
             </Button>

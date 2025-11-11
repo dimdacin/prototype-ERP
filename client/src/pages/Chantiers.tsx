@@ -5,7 +5,7 @@ import type { Chantier } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 
 export default function Chantiers() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: chantiers, isLoading } = useQuery<Chantier[]>({
     queryKey: ["/api/chantiers"],
   });
@@ -36,7 +36,7 @@ export default function Chantiers() {
       spentMateriaux: chantier.budgetReelMateriaux !== undefined && chantier.budgetReelMateriaux !== null ? Number(chantier.budgetReelMateriaux) : undefined,
       spentEquipement: chantier.budgetReelEquipement !== undefined && chantier.budgetReelEquipement !== null ? Number(chantier.budgetReelEquipement) : undefined,
       progress: chantier.progression,
-      deadline: chantier.dateLimite ? new Date(chantier.dateLimite).toLocaleDateString('fr-FR') : "N/A"
+      deadline: chantier.dateLimite ? new Date(chantier.dateLimite).toLocaleDateString(i18n.language) : t('common.na')
     };
   };
 

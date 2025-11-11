@@ -72,7 +72,7 @@ export default function Equipements() {
           <ImportEquipmentDialog>
             <Button variant="outline" data-testid="button-import-excel">
               <Upload className="h-4 w-4 mr-2" />
-              Importer Excel
+              {t('equipements.importExcel')}
             </Button>
           </ImportEquipmentDialog>
           <Button data-testid="button-nouvel-equipement">
@@ -149,16 +149,16 @@ export default function Equipements() {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium">ID</th>
-                  <th className="text-left p-3 font-medium">Modèle</th>
-                  <th className="text-left p-3 font-medium">Année</th>
-                  <th className="text-left p-3 font-medium">Plaque</th>
-                  <th className="text-left p-3 font-medium">Carburant</th>
-                  <th className="text-left p-3 font-medium">Conducteur</th>
-                  <th className="text-left p-3 font-medium">GPS/Compteur</th>
-                  <th className="text-left p-3 font-medium">Taux h.</th>
-                  <th className="text-left p-3 font-medium">Conso.</th>
-                  <th className="text-left p-3 font-medium">Maintenance</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.id')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.model')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.year')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.plateNumber')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.fuelType')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.driver')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.gpsUnit')}/{t('equipements.meterUnit')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.hourlyRate')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.fuelConsumption')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.maintenanceCost')}</th>
                   <th className="text-left p-3 font-medium">{t('equipements.status')}</th>
                   <th className="text-left p-3 font-medium">{t('equipements.actions')}</th>
                 </tr>

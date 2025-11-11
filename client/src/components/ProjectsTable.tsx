@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
 
 interface Project {
   id: string;
@@ -33,29 +34,40 @@ interface ProjectsTableProps {
   onEdit?: (id: string) => void;
 }
 
-const statusConfig = {
-  en_cours: { label: "En cours", variant: "default" as const },
-  planifie: { label: "Planifié", variant: "secondary" as const },
-  termine: { label: "Terminé", variant: "outline" as const },
-  retard: { label: "Retard", variant: "destructive" as const },
-};
-
 export default function ProjectsTable({ projects, onView, onEdit }: ProjectsTableProps) {
+  const { t, i18n } = useTranslation();
+  
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat(i18n.language, {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+  
+  const statusConfig = {
+    en_cours: { label: t('chantiers.inProgress'), variant: "default" as const },
+    planifie: { label: t('chantiers.planned'), variant: "secondary" as const },
+    termine: { label: t('chantiers.statusCompleted'), variant: "outline" as const },
+    retard: { label: t('chantiers.delayed'), variant: "destructive" as const },
+  };
+  
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Code</TableHead>
-            <TableHead>Nom du Chantier</TableHead>
-            <TableHead>Bénéficiaire</TableHead>
-            <TableHead>Statut</TableHead>
-            <TableHead className="text-right">Budget Total</TableHead>
-            <TableHead className="text-right">MDO</TableHead>
-            <TableHead className="text-right">Matériaux</TableHead>
-            <TableHead className="text-right">Équipement</TableHead>
-            <TableHead className="text-right">Progression</TableHead>
-            <TableHead>Date Limite</TableHead>
+            <TableHead>{t('chantiers.code')}</TableHead>
+            <TableHead>{t('chantiers.siteName')}</TableHead>
+            <TableHead>{t('chantiers.beneficiary')}</TableHead>
+            <TableHead>{t('chantiers.status')}</TableHead>
+            <TableHead className="text-right">{t('chantiers.totalBudget')}</TableHead>
+            <TableHead className="text-right">{t('chantiers.labor')}</TableHead>
+            <TableHead className="text-right">{t('chantiers.materials')}</TableHead>
+            <TableHead className="text-right">{t('chantiers.equipment')}</TableHead>
+            <TableHead className="text-right">{t('chantiers.progress')}</TableHead>
+            <TableHead>{t('chantiers.dateLimit')}</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
@@ -64,51 +76,51 @@ export default function ProjectsTable({ projects, onView, onEdit }: ProjectsTabl
             const variance = ((project.spent - project.budget) / project.budget) * 100;
             return (
               <TableRow key={project.id} data-testid={`row-project-${project.id}`}>
-                <TableCell className="font-mono text-sm font-medium">{project.codeProjet || "-"}</TableCell>
+                <TableCell className="font-mono text-sm font-medium">{project.codeProjet || t('common.noData')}</TableCell>
                 <TableCell className="font-medium">{project.name}</TableCell>
-                <TableCell className="text-sm">{project.beneficiaire || <span className="text-muted-foreground">-</span>}</TableCell>
+                <TableCell className="text-sm">{project.beneficiaire || <span className="text-muted-foreground">{t('common.noData')}</span>}</TableCell>
                 <TableCell>
                   <Badge variant={statusConfig[project.status].variant}>
                     {statusConfig[project.status].label}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="font-medium">€{project.budget.toLocaleString()}</div>
+                  <div className="font-medium">{formatCurrency(project.budget)}</div>
                   <div className="text-xs text-muted-foreground">
                     <span className={variance > 0 ? "text-chart-4" : ""}>
-                      €{project.spent.toLocaleString()}
+                      {formatCurrency(project.spent)}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="text-right text-sm">
                   {project.budgetMainDoeuvre !== undefined && project.budgetMainDoeuvre !== null ? (
                     <>
-                      <div>€{Number(project.budgetMainDoeuvre).toLocaleString()}</div>
+                      <div>{formatCurrency(Number(project.budgetMainDoeuvre))}</div>
                       {project.spentMainDoeuvre !== undefined && project.spentMainDoeuvre !== null && (
-                        <div className="text-xs text-muted-foreground">€{Number(project.spentMainDoeuvre).toLocaleString()}</div>
+                        <div className="text-xs text-muted-foreground">{formatCurrency(Number(project.spentMainDoeuvre))}</div>
                       )}
                     </>
-                  ) : <span className="text-muted-foreground">-</span>}
+                  ) : <span className="text-muted-foreground">{t('common.noData')}</span>}
                 </TableCell>
                 <TableCell className="text-right text-sm">
                   {project.budgetMateriaux !== undefined && project.budgetMateriaux !== null ? (
                     <>
-                      <div>€{Number(project.budgetMateriaux).toLocaleString()}</div>
+                      <div>{formatCurrency(Number(project.budgetMateriaux))}</div>
                       {project.spentMateriaux !== undefined && project.spentMateriaux !== null && (
-                        <div className="text-xs text-muted-foreground">€{Number(project.spentMateriaux).toLocaleString()}</div>
+                        <div className="text-xs text-muted-foreground">{formatCurrency(Number(project.spentMateriaux))}</div>
                       )}
                     </>
-                  ) : <span className="text-muted-foreground">-</span>}
+                  ) : <span className="text-muted-foreground">{t('common.noData')}</span>}
                 </TableCell>
                 <TableCell className="text-right text-sm">
                   {project.budgetEquipement !== undefined && project.budgetEquipement !== null ? (
                     <>
-                      <div>€{Number(project.budgetEquipement).toLocaleString()}</div>
+                      <div>{formatCurrency(Number(project.budgetEquipement))}</div>
                       {project.spentEquipement !== undefined && project.spentEquipement !== null && (
-                        <div className="text-xs text-muted-foreground">€{Number(project.spentEquipement).toLocaleString()}</div>
+                        <div className="text-xs text-muted-foreground">{formatCurrency(Number(project.spentEquipement))}</div>
                       )}
                     </>
-                  ) : <span className="text-muted-foreground">-</span>}
+                  ) : <span className="text-muted-foreground">{t('common.noData')}</span>}
                 </TableCell>
                 <TableCell className="text-right">{project.progress}%</TableCell>
                 <TableCell>{project.deadline}</TableCell>
@@ -122,11 +134,11 @@ export default function ProjectsTable({ projects, onView, onEdit }: ProjectsTabl
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => onView?.(project.id)}>
                         <Eye className="mr-2 h-4 w-4" />
-                        Voir détails
+                        {t('chantiers.viewDetails')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => onEdit?.(project.id)}>
                         <Pencil className="mr-2 h-4 w-4" />
-                        Modifier
+                        {t('chantiers.editProject')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

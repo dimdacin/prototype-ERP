@@ -58,16 +58,16 @@ export default function Salaries() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/salaries"] });
       toast({
-        title: "Succès",
-        description: "Les informations du salarié ont été mises à jour",
+        title: t('achats.success'),
+        description: t('salaries.employeeUpdated'),
       });
       setEditingSalarie(null);
       form.reset();
     },
     onError: () => {
       toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le salarié",
+        title: t('achats.error'),
+        description: t('salaries.errorUpdating'),
         variant: "destructive",
       });
     },
@@ -85,11 +85,11 @@ export default function Salaries() {
   const getStatutBadge = (statut: string) => {
     switch (statut) {
       case "disponible":
-        return <Badge variant="default" className="bg-green-600">Disponible</Badge>;
+        return <Badge variant="default" className="bg-green-600">{t('salaries.statusAvailable')}</Badge>;
       case "affecte":
-        return <Badge variant="secondary">Affecté</Badge>;
+        return <Badge variant="secondary">{t('salaries.statusAssigned')}</Badge>;
       case "conge":
-        return <Badge variant="outline" className="border-orange-600 text-orange-600">Congé</Badge>;
+        return <Badge variant="outline" className="border-orange-600 text-orange-600">{t('salaries.statusLeave')}</Badge>;
       default:
         return <Badge>{statut}</Badge>;
     }
@@ -160,13 +160,13 @@ export default function Salaries() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Salariés</h1>
-          <p className="text-muted-foreground mt-1">Gérez votre équipe et ressources humaines</p>
+          <h1 className="text-3xl font-semibold tracking-tight">{t('salaries.title')}</h1>
+          <p className="text-muted-foreground mt-1">{t('salaries.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <Button data-testid="button-nouveau-salarie">
             <Plus className="h-4 w-4 mr-2" />
-            Nouveau salarié
+            {t('salaries.newEmployee')}
           </Button>
         </div>
       </div>
@@ -174,7 +174,7 @@ export default function Salaries() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total salariés</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('salaries.totalEmployees')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -184,7 +184,7 @@ export default function Salaries() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Disponibles</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('salaries.available')}</CardTitle>
             <div className="h-2 w-2 rounded-full bg-green-600"></div>
           </CardHeader>
           <CardContent>
@@ -194,7 +194,7 @@ export default function Salaries() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Affectés</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('salaries.assigned')}</CardTitle>
             <div className="h-2 w-2 rounded-full bg-blue-600"></div>
           </CardHeader>
           <CardContent>
@@ -207,12 +207,12 @@ export default function Salaries() {
         <CardHeader>
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <CardTitle>Liste des salariés</CardTitle>
+              <CardTitle>{t('salaries.employeeList')}</CardTitle>
               <div className="flex items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
-                    placeholder="Rechercher un salarié..."
+                    placeholder={t('salaries.searchPlaceholder')}
                     className="pl-10 w-[300px]"
                     data-testid="input-recherche-salarie"
                     value={searchQuery}
@@ -221,21 +221,21 @@ export default function Salaries() {
                 </div>
                 <Button variant="outline" size="sm" data-testid="button-exporter">
                   <Download className="h-4 w-4 mr-2" />
-                  Exporter
+                  {t('common.export')}
                 </Button>
               </div>
             </div>
             
             <div className="flex items-center gap-2 flex-wrap">
               <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Filtrer par:</span>
+              <span className="text-sm text-muted-foreground">{t('salaries.filterBy')}</span>
               
               <Select value={divisionFilter} onValueChange={setDivisionFilter}>
                 <SelectTrigger className="w-[180px]" data-testid="select-division">
-                  <SelectValue placeholder="Division" />
+                  <SelectValue placeholder={t('salaries.division')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes divisions</SelectItem>
+                  <SelectItem value="all">{t('salaries.allDivisions')}</SelectItem>
                   {divisions.map(div => (
                     <SelectItem key={div} value={div}>{div}</SelectItem>
                   ))}
@@ -244,10 +244,10 @@ export default function Salaries() {
 
               <Select value={serviceFilter} onValueChange={setServiceFilter}>
                 <SelectTrigger className="w-[180px]" data-testid="select-service">
-                  <SelectValue placeholder="Service" />
+                  <SelectValue placeholder={t('salaries.service')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tous services</SelectItem>
+                  <SelectItem value="all">{t('salaries.allServices')}</SelectItem>
                   {services.map(svc => (
                     <SelectItem key={svc} value={svc}>{svc}</SelectItem>
                   ))}
@@ -256,10 +256,10 @@ export default function Salaries() {
 
               <Select value={coastCenterFilter} onValueChange={setCoastCenterFilter}>
                 <SelectTrigger className="w-[200px]" data-testid="select-coast-center">
-                  <SelectValue placeholder="Centre de coût" />
+                  <SelectValue placeholder={t('salaries.costCenter')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tous centres</SelectItem>
+                  <SelectItem value="all">{t('salaries.allCostCenters')}</SelectItem>
                   {coastCenters.map(cc => (
                     <SelectItem key={cc} value={cc}>{cc}</SelectItem>
                   ))}
@@ -277,7 +277,7 @@ export default function Salaries() {
                   }}
                   data-testid="button-clear-filters"
                 >
-                  Réinitialiser
+                  {t('salaries.resetFilters')}
                 </Button>
               )}
             </div>
@@ -288,14 +288,14 @@ export default function Salaries() {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium">Nom</th>
-                  <th className="text-left p-3 font-medium">Fonction</th>
-                  <th className="text-left p-3 font-medium">Division</th>
-                  <th className="text-left p-3 font-medium">Service</th>
-                  <th className="text-left p-3 font-medium">Centre de coût</th>
-                  <th className="text-left p-3 font-medium">Taux horaire</th>
-                  <th className="text-left p-3 font-medium">Statut</th>
-                  <th className="text-left p-3 font-medium">Actions</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.name')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.function')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.division')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.service')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.costCenter')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.hourlyRate')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.status')}</th>
+                  <th className="text-left p-3 font-medium">{t('salaries.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -323,7 +323,7 @@ export default function Salaries() {
                         onClick={() => handleEdit(salarie)}
                         data-testid={`button-edit-${salarie.id}`}
                       >
-                        Modifier
+                        {t('salaries.edit')}
                       </Button>
                     </td>
                   </tr>
@@ -348,9 +348,9 @@ export default function Salaries() {
       <Dialog open={!!editingSalarie} onOpenChange={(open) => !open && setEditingSalarie(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Modifier le salarié</DialogTitle>
+            <DialogTitle>{t('salaries.editEmployee')}</DialogTitle>
             <DialogDescription>
-              Modifiez les informations du salarié {editingSalarie?.nom} {editingSalarie?.prenom}
+              {t('salaries.editDescription')} {editingSalarie?.nom} {editingSalarie?.prenom}
             </DialogDescription>
           </DialogHeader>
 
@@ -363,7 +363,7 @@ export default function Salaries() {
                   name="nom"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nom</FormLabel>
+                      <FormLabel>{t('salaries.name')}</FormLabel>
                       <FormControl>
                         <Input {...field} data-testid="input-nom" />
                       </FormControl>
@@ -377,7 +377,7 @@ export default function Salaries() {
                   name="prenom"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Prénom</FormLabel>
+                      <FormLabel>{t('salaries.firstName')}</FormLabel>
                       <FormControl>
                         <Input {...field} data-testid="input-prenom" />
                       </FormControl>
@@ -392,7 +392,7 @@ export default function Salaries() {
                 name="poste"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fonction</FormLabel>
+                    <FormLabel>{t('salaries.function')}</FormLabel>
                     <FormControl>
                       <Input {...field} data-testid="input-poste" />
                     </FormControl>
@@ -407,7 +407,7 @@ export default function Salaries() {
                   name="division"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Division</FormLabel>
+                      <FormLabel>{t('salaries.division')}</FormLabel>
                       <FormControl>
                         <Input {...field} value={field.value || ""} data-testid="input-division" />
                       </FormControl>
@@ -421,7 +421,7 @@ export default function Salaries() {
                   name="services"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service</FormLabel>
+                      <FormLabel>{t('salaries.service')}</FormLabel>
                       <FormControl>
                         <Input {...field} value={field.value || ""} data-testid="input-services" />
                       </FormControl>
@@ -436,7 +436,7 @@ export default function Salaries() {
                 name="coastCenter"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Centre de coût</FormLabel>
+                    <FormLabel>{t('salaries.costCenter')}</FormLabel>
                     <FormControl>
                       <Input {...field} value={field.value || ""} data-testid="input-coast-center" />
                     </FormControl>
@@ -451,7 +451,7 @@ export default function Salaries() {
                   name="tauxHoraire"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Taux horaire (€)</FormLabel>
+                      <FormLabel>{t('salaries.hourlyRate')} (€)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -471,7 +471,7 @@ export default function Salaries() {
                   name="salaryMonth"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Salaire mensuel (€)</FormLabel>
+                      <FormLabel>{t('salaries.monthlySalary')} (€)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -492,17 +492,17 @@ export default function Salaries() {
                 name="statut"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Statut</FormLabel>
+                    <FormLabel>{t('salaries.status')}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger data-testid="select-statut">
-                          <SelectValue placeholder="Sélectionner un statut" />
+                          <SelectValue placeholder={t('salaries.status')} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="disponible">Disponible</SelectItem>
-                        <SelectItem value="affecte">Affecté</SelectItem>
-                        <SelectItem value="conge">Congé</SelectItem>
+                        <SelectItem value="disponible">{t('salaries.statusAvailable')}</SelectItem>
+                        <SelectItem value="affecte">{t('salaries.statusAssigned')}</SelectItem>
+                        <SelectItem value="conge">{t('salaries.statusLeave')}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -516,7 +516,7 @@ export default function Salaries() {
                   name="telephone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Téléphone</FormLabel>
+                      <FormLabel>{t('salaries.phone')}</FormLabel>
                       <FormControl>
                         <Input {...field} value={field.value || ""} data-testid="input-telephone" />
                       </FormControl>
@@ -530,7 +530,7 @@ export default function Salaries() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{t('salaries.email')}</FormLabel>
                       <FormControl>
                         <Input type="email" {...field} value={field.value || ""} data-testid="input-email" />
                       </FormControl>
@@ -547,14 +547,14 @@ export default function Salaries() {
                   onClick={() => setEditingSalarie(null)}
                   data-testid="button-cancel"
                 >
-                  Annuler
+                  {t('common.cancel')}
                 </Button>
                 <Button 
                   type="submit" 
                   disabled={updateMutation.isPending}
                   data-testid="button-save"
                 >
-                  {updateMutation.isPending ? "Enregistrement..." : "Enregistrer"}
+                  {updateMutation.isPending ? t('common.loading') : t('salaries.saveChanges')}
                 </Button>
               </DialogFooter>
             </form>

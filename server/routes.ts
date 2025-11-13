@@ -196,6 +196,109 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/equipements/stats-by-category", async (req, res) => {
+    try {
+      const equipements = await storage.getAllEquipements();
+      
+      const statsByCategory: Record<string, {
+        count: number;
+        available: number;
+        maintenance: number;
+        outOfService: number;
+        avgCostPerHour: number | null;
+        avgCostPer100km: number | null;
+      }> = {};
+      
+      equipements.forEach(eq => {
+        const cat = eq.categorie || 'Non classé';
+        if (!statsByCategory[cat]) {
+          statsByCategory[cat] = {
+            count: 0,
+            available: 0,
+            maintenance: 0,
+            outOfService: 0,
+            avgCostPerHour: null,
+            avgCostPer100km: null,
+          };
+        }
+        
+        statsByCategory[cat].count++;
+        
+        if (eq.statut === 'disponible') statsByCategory[cat].available++;
+        else if (eq.statut === 'maintenance') statsByCategory[cat].maintenance++;
+        else if (eq.statut === 'hors_service') statsByCategory[cat].outOfService++;
+      });
+      
+      res.json(statsByCategory);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch category stats" });
+    }
+  });
+
+  app.get("/api/equipements/category-groups", async (req, res) => {
+    try {
+      const categoryFamilies = {
+        "engins_chantier": {
+          name: "Engins de chantier",
+          icon: "construction",
+          categories: ["Compactoare", "Incarcatoare frontale", "Finisoare", "Excavatoare", "Autogredere", "Tractoare", "Freze"]
+        },
+        "transport_lourd": {
+          name: "Transport lourd",
+          icon: "truck",
+          categories: ["S/REMOCI", "Parcul auto", "S/REMOCI Trall"]
+        },
+        "transport_leger": {
+          name: "Transport léger",
+          icon: "van",
+          categories: ["Autoparc intern", "Autoturizme", "Microbuse", "Personnel"]
+        },
+        "specialises": {
+          name: "Spécialisés",
+          icon: "wrench",
+          categories: ["Tehnica specializata", "Automacarale", "Reciclator"]
+        },
+        "petite_mecanisation": {
+          name: "Petite mécanisation",
+          icon: "cog",
+          categories: ["м. механизация"]
+        }
+      };
+      
+      res.json(categoryFamilies);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch category groups" });
+    }
+  });
+
+  app.patch("/api/equipements/:id/recalculate", async (req, res) => {
+    try {
+      const equipement = await storage.getEquipement(req.params.id);
+      if (!equipement) {
+        return res.status(404).json({ error: "Equipement not found" });
+      }
+      
+      const { recalculateEquipmentCosts } = await import('./services/equipment-calculations');
+      
+      const calculated = recalculateEquipmentCosts({
+        consoHeureLitres: equipement.consoHeureLitres,
+        conso100kmLitres: equipement.conso100kmLitres,
+        prixCarburantLitre: equipement.prixCarburantLitre,
+        maintenanceCost: equipement.maintenanceCost,
+        kmTravailAnnuel: equipement.kmTravailAnnuel,
+        heuresTravailAnnuel: equipement.heuresTravailAnnuel,
+        amortTotalLei: equipement.amortTotalLei,
+        hourlyRate: equipement.hourlyRate,
+      });
+      
+      const updated = await storage.updateEquipement(req.params.id, calculated);
+      res.json(updated);
+    } catch (error) {
+      console.error("Recalculation error:", error);
+      res.status(500).json({ error: "Failed to recalculate costs" });
+    }
+  });
+
   // ========== AFFECTATIONS SALARIÉS ROUTES ==========
   app.get("/api/affectations/salaries", async (req, res) => {
     try {

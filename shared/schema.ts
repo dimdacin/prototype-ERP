@@ -75,6 +75,31 @@ export const equipements = pgTable("equipements", {
   hourlyRate: decimal("hourly_rate", { precision: 10, scale: 2 }),
   fuelConsumption: decimal("fuel_consumption", { precision: 10, scale: 2 }),
   maintenanceCost: decimal("maintenance_cost", { precision: 12, scale: 2 }),
+  
+  consoHeureLitres: decimal("conso_heure_litres", { precision: 10, scale: 2 }),
+  conso100kmLitres: decimal("conso_100km_litres", { precision: 10, scale: 2 }),
+  coutCarbHeureLei: decimal("cout_carb_heure_lei", { precision: 10, scale: 2 }),
+  coutCarb100kmLei: decimal("cout_carb_100km_lei", { precision: 10, scale: 2 }),
+  prixCarburantLitre: decimal("prix_carburant_litre", { precision: 10, scale: 2 }),
+  
+  kmTravailAnnuel: integer("km_travail_annuel"),
+  heuresTravailAnnuel: integer("heures_travail_annuel"),
+  entretien100kmLei: decimal("entretien_100km_lei", { precision: 10, scale: 2 }),
+  entretienHeureLei: decimal("entretien_heure_lei", { precision: 10, scale: 2 }),
+  
+  valeurComptableLei: decimal("valeur_comptable_lei", { precision: 12, scale: 2 }),
+  dureeVieAns: integer("duree_vie_ans"),
+  valeurResiduelleLei: decimal("valeur_residuelle_lei", { precision: 12, scale: 2 }),
+  baseAmortissableLei: decimal("base_amortissable_lei", { precision: 12, scale: 2 }),
+  tauxAmortAnnuel: decimal("taux_amort_annuel", { precision: 10, scale: 2 }),
+  amortTotalLei: decimal("amort_total_lei", { precision: 12, scale: 2 }),
+  amortHeureLei: decimal("amort_heure_lei", { precision: 10, scale: 2 }),
+  
+  coutUsage1hLei: decimal("cout_usage_1h_lei", { precision: 10, scale: 2 }),
+  coutUsage100kmLei: decimal("cout_usage_100km_lei", { precision: 10, scale: 2 }),
+  
+  tagsUsage: text("tags_usage").array(),
+  
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 

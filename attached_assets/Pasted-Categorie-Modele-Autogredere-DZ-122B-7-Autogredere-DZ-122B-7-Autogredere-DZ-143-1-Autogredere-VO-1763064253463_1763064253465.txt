@@ -1,0 +1,161 @@
+Categorie	Modele
+Autogredere	DZ-122B-7
+Autogredere	DZ-122B-7
+Autogredere	DZ-143-1
+Autogredere	VOLVO G740B
+Autogredere	VOLVO G930
+Automacarale	MAZ 5337    (28L), lucru (9L)
+Automacarale	Mercedes Actros
+Autoparc intern	GAZ 33079 Automocamion ,stropitoare(benzin/GPL)
+Autoparc intern	KAMAZ 5511    (36,5L)
+Autoparc intern	KAMAZ 5511    (36,5L)
+Autoparc intern	KAMAZ 55111     (36,5L)
+Autoparc intern	MAZ 5551 28  (28L)
+Autoparc intern	ZIL 130 , autogudronator
+Autoparc intern	ZIL 130, stropitoare
+Autoparc intern	ZIL 431610 Camion cisterna (19L)
+Autoparc intern	GAZ 330U (benzin/GPL)
+Autoparc intern	GAZ 53 Camion(Ilosos) benzin/GPL
+Autoparc intern	GAZ 5312 Camion cisterna  p-u motorina
+Autoparc intern	KAMAZ
+Autoparc intern	KAMAZ  (32L)
+Autoparc intern	KAMAZ 52213 (cisterna)      (32L)
+Autoparc intern	KAMAZ 5320    (32L)(cisterna apa)
+Autoparc intern	KAMAZ 55102    (32L)
+Autoturizme	Brillance FRV 1.5 MT
+Autoturizme	Volkswagen Caddy (6L)
+Autoturizme	Brillance FRV 1.5 MT
+Autoturizme	Brillance FSV 1.6 AT
+Autoturizme	Mercedes Bent S400
+Autoturizme	Nisan Xtrail
+Autoturizme	Opel
+Autoturizme	Renault Scenic (7L)
+Autoturizme	Skoda Superb (10L)
+Autoturizme	Volkswagen Caddy
+Compactoare	AMMANN AD75 (5L)
+Compactoare	Bomag BW-24R,24t (7L)
+Compactoare	HAMM DV 6.21   (5L)
+Compactoare	BOMAG BW120 (3,5L)
+Compactoare	Caterpiler CB535B   (7L)
+Compactoare	BOMAG BW174 (6L)
+Compactoare	DU47 (5,3L)
+Compactoare	DU48 (5,3L)
+Compactoare	HAMM (5L)
+Compactoare	Caterpillar CB535 B (7L)
+Compactoare	BOMAG BW141   (5L)
+Compactoare	BOMAG BW170 AD  (6L)
+Compactoare	DYNAPAC CC424 (8L)
+Compactoare	CAT PS 300B   (9L)
+Compactoare	DYNAPAC 17tn CC501 (9L)
+Compactoare	BOMAG BW 184  (7L)
+Compactoare	BOMAG BW170 ,12t,(6L)
+Compactoare	HAMM HD8 VV 1,5t
+Compactoare	DYNAPAC CC501 a/f 2001 (9L)
+Compactoare	Bomag BW-174AD,11t (7L)
+Excavatoare	Caterpillar 428D
+Excavatoare	PFS 0,75/MTZ 82
+Excavatoare	Terex 1505M
+Excavatoare	Terex TLB890 PS
+Excavatoare	Liebherr A902
+Finisoare	Bitelli BB670  ( 10L)
+Finisoare	Caterpillar AP555E (13L)
+Finisoare	Dynapac F141 C (13L)
+Finisoare	Finisor acostament Strassmayr BF290 (3,5L/ora)
+Finisoare	VOGELE 1600  (11L)
+Finisoare	VOGELE 1603-1 (11L)
+Finisoare	VOGELE 1800  (13L)
+Finisoare	VOGELE S 1800-2  (13L)
+Freze	SF150  (32L)
+Freze	SF60    (13L)
+Incarcatoare frontale	CAT 908  (6L)
+Incarcatoare frontale	Santai SL 50   (13L)
+Incarcatoare frontale	SDLG L956FH  (12L)
+Incarcatoare frontale	SDLG953    (11L)
+Incarcatoare frontale	Caterpillar 930G (13L)
+Incarcatoare frontale	HOUGH M10A  (15L)
+Incarcatoare frontale	Hyundai HL-760-9  (12L)
+Incarcatoare frontale	L-34  (15L)
+Incarcatoare frontale	L-34 Comrat
+Incarcatoare frontale	LONKING CDM 312 ( 15,9L)
+Incarcatoare frontale	PK40  (11L)Rogojeni
+Incarcatoare frontale	PK40 2007 (11L) Comrat
+Microbuse	FORD Tranzit     (11L)
+Microbuse	Mercedes CDI 413   (12,5L)
+Microbuse	FORD Tranzit     (12,5L)
+Microbuse	Mercedes 213CDI   (12,5L)
+Microbuse	Mercedes 312D    (12,5L)
+Microbuse	Mercedes 312D   (12,5L)
+Microbuse	Mercedes 312D (12,5L)
+Microbuse	Mercedes 312D (12,5L)
+Microbuse	Mercedes 312D Sprinter (12,5L)
+Microbuse	Mercedes 313CDI   (12,5L)
+Parcul auto	MAN 19403
+Parcul auto	VOLVO FH-440   (39L)
+Parcul auto	VOLVO FH-440 (40L)
+Parcul auto	MAN TGX 18.460 4x2 BLS (39L)
+Parcul auto	MAN TG 410A    (40L)
+Parcul auto	MAN TGA 18.430 4x2   (39L)
+Parcul auto	MAN TGA 18.440 BLS   (39L)
+Parcul auto	MAN TGA 18.440 BLS( 39L)
+Parcul auto	MAN TGS 18.440   (39L)
+Parcul auto	MAN TGS 18.440  (39L)
+Parcul auto	Mercedes ( AXOR)
+Parcul auto	Mercedes Axor    (39L)
+Personnel	Scoda octavia Vlah E
+Personnel	Toyota Igor Cosiuc
+Personnel	Toyota Soltoianu
+Personnel	Suzuki Jurminschi Alexandru
+Personnel	Audi Bologan
+Personnel	Honda Marfoi Bogdan
+Personnel	Mercedes Coval G
+Reciclator	Wirtgen HAMM Raco 450 SK
+S/REMOCI	Bergland (wagon) pentru oamen
+S/REMOCI	Mega
+S/REMOCI	Mega (MAN BZJ 135)
+S/REMOCI	Odaz 936 (wagon)
+S/REMOCI	Schmitz
+S/REMOCI	Schmitz (MAN BYF 855)
+S/REMOCI	Schmitz (volvo ATA 686)
+S/REMOCI	Schmitz MAN ESQ 421
+S/REMOCI	Tip BS1000 (бочка) Гудронатор
+S/REMOCI	Tip BS1000/1 (бочка) Гудронатор
+S/REMOCI	Цистерна 682 7
+S/REMOCI	Carnehl
+S/REMOCI	cisterna ODAZ9370 (Emulsia) Sudare
+S/REMOCI	Fruehauf
+S/REMOCI	Gen Tral cisterna (bitum)
+S/REMOCI	Hobby Prestige  (Sector Bologan - Marcaj)
+S/REMOCI	Kaiser (MAN CJR 693)
+S/REMOCI	KOGEL SN24
+S/REMOCI	Mega
+S/REMOCI Trall	s/remorca trall Andover Notebom (XXE 875, Rotaru M)
+S/REMOCI Trall	s/remorca trall Bertoja (ESQ 440,Tanasevici I)
+S/REMOCI Trall	s/remorca trall Schmitz (BLB 710)
+Tehnica specializata	Autogudronator ZIL 130 (19L, 9L rozliv,5L GPL)
+Tehnica specializata	GAZ Smeli 10A (Marcaj) /CSK 752/
+Tehnica specializata	Renault Magnium Special (Tratament)
+Tehnica specializata	Volvo Fm- 9380 (Tratament)
+Tractoare	Belarus MTЗ-82.1  (7L)
+Tractoare	Buldozer DZ42 (8,5L)
+Tractoare	Landini (9L)
+Tractoare	Buldozer T130
+м. механизация	малая механизация
+м. механизация	Ciocan pneumatic manual Sullair 03
+м. механизация	Ciocan pneumatic МОП-3
+м. механизация	Ciocan rotopercutor
+м. механизация	Compactor neautopropulsant Wacker nr.2
+м. механизация	Masina de taiat asfalt PP450-PG420
+м. механизация	Masina de taiat asfalt Wacker
+м. механизация	Masina de taiat beton PPR350
+м. механизация	Masina sub presiune inalta Karcher
+м. механизация	Placa compactoare masalta MS90-3 628
+м. механизация	Placa compactoare Mikasa T6124
+м. механизация	Aparat de sudat
+м. механизация	Placa compactoare N15105
+м. механизация	Placa compactoare PC90
+м. механизация	Placa compactoare PCR-160-SE
+м. механизация	Placa compactoare Robin
+м. механизация	Placa compactoare WACKER 6595937
+м. механизация	Компрессор M26 KAESER
+м. механизация	Вибротрамбовка Wacker
+м. механизация	Вибротрамбовка Wacker

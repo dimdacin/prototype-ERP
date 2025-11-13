@@ -9,6 +9,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/LanguageSelector";
 import Dashboard from "@/pages/Dashboard";
 import Chantiers from "@/pages/Chantiers";
+import ChantierDetails from "@/pages/ChantierDetails";
 import Salaries from "@/pages/Salaries";
 import Equipements from "@/pages/Equipements";
 import Achats from "@/pages/Achats";
@@ -24,6 +25,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
+      <Route path="/chantiers/:id" component={ChantierDetails} />
       <Route path="/chantiers" component={Chantiers} />
       <Route path="/salaries" component={Salaries} />
       <Route path="/equipements" component={Equipements} />

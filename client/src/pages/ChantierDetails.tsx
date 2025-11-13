@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ChantierOverview from "@/components/ChantierOverview";
 
 interface ChantierDetailsResponse {
   chantier: {
@@ -198,15 +199,12 @@ export default function ChantierDetails() {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("chantiers.projectInfo")}</CardTitle>
-              <CardDescription>{t("chantiers.overview")}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t("common.inDevelopment")}</p>
-            </CardContent>
-          </Card>
+          <ChantierOverview
+            chantier={chantier}
+            responsable={responsable}
+            budget={data.budget}
+            completude={data.completude}
+          />
         </TabsContent>
 
         {/* Planning Tab */}

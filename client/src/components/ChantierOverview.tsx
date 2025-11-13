@@ -200,7 +200,10 @@ export default function ChantierOverview({ chantier, responsable, budget, comple
                 {formatCurrency(budget.ecarts.total)}
               </p>
               <p className="text-sm text-muted-foreground">
-                {budget.ecarts.total > 0 ? '+' : ''}{((budget.ecarts.total / budget.prevu.total) * 100).toFixed(1)}%
+                {budget.prevu.total > 0 
+                  ? `${budget.ecarts.total > 0 ? '+' : ''}${((budget.ecarts.total / budget.prevu.total) * 100).toFixed(1)}%`
+                  : 'N/A'
+                }
               </p>
             </div>
             <div className="text-center">

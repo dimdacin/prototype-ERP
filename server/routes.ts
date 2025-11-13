@@ -135,64 +135,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ========== ÉQUIPEMENTS ROUTES ==========
+  // IMPORTANT: Routes spécifiques AVANT routes paramétriques (:id)
+  
   app.get("/api/equipements", async (req, res) => {
     try {
       const equipements = await storage.getAllEquipements();
       res.json(equipements);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch equipements" });
-    }
-  });
-
-  app.get("/api/equipements/:id", async (req, res) => {
-    try {
-      const equipement = await storage.getEquipement(req.params.id);
-      if (!equipement) {
-        return res.status(404).json({ error: "Equipement not found" });
-      }
-      res.json(equipement);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch equipement" });
-    }
-  });
-
-  app.post("/api/equipements", async (req, res) => {
-    try {
-      const validated = insertEquipementSchema.parse(req.body);
-      const equipement = await storage.createEquipement(validated);
-      res.status(201).json(equipement);
-    } catch (error) {
-      res.status(400).json({ error: "Invalid equipement data" });
-    }
-  });
-
-  app.patch("/api/equipements/:id", async (req, res) => {
-    try {
-      const equipement = await storage.updateEquipement(req.params.id, req.body);
-      if (!equipement) {
-        return res.status(404).json({ error: "Equipement not found" });
-      }
-      res.json(equipement);
-    } catch (error) {
-      res.status(400).json({ error: "Failed to update equipement" });
-    }
-  });
-
-  app.delete("/api/equipements/:id", async (req, res) => {
-    try {
-      await storage.deleteEquipement(req.params.id);
-      res.status(204).send();
-    } catch (error) {
-      res.status(500).json({ error: "Failed to delete equipement" });
-    }
-  });
-
-  app.delete("/api/equipements", async (req, res) => {
-    try {
-      await storage.deleteAllEquipements();
-      res.status(200).json({ message: "All equipment deleted successfully" });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to delete all equipements" });
     }
   });
 
@@ -308,6 +258,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(categoryFamilies);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch category groups" });
+    }
+  });
+
+  // Routes paramétriques (APRÈS les spécifiques)
+  app.get("/api/equipements/:id", async (req, res) => {
+    try {
+      const equipement = await storage.getEquipement(req.params.id);
+      if (!equipement) {
+        return res.status(404).json({ error: "Equipement not found" });
+      }
+      res.json(equipement);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch equipement" });
+    }
+  });
+
+  app.post("/api/equipements", async (req, res) => {
+    try {
+      const validated = insertEquipementSchema.parse(req.body);
+      const equipement = await storage.createEquipement(validated);
+      res.status(201).json(equipement);
+    } catch (error) {
+      res.status(400).json({ error: "Invalid equipement data" });
+    }
+  });
+
+  app.patch("/api/equipements/:id", async (req, res) => {
+    try {
+      const equipement = await storage.updateEquipement(req.params.id, req.body);
+      if (!equipement) {
+        return res.status(404).json({ error: "Equipement not found" });
+      }
+      res.json(equipement);
+    } catch (error) {
+      res.status(400).json({ error: "Failed to update equipement" });
+    }
+  });
+
+  app.delete("/api/equipements/:id", async (req, res) => {
+    try {
+      await storage.deleteEquipement(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete equipement" });
+    }
+  });
+
+  app.delete("/api/equipements", async (req, res) => {
+    try {
+      await storage.deleteAllEquipements();
+      res.status(200).json({ message: "All equipment deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete all equipements" });
     }
   });
 

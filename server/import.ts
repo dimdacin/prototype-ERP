@@ -80,7 +80,9 @@ export function parseExcelToEquipements(fileBuffer: Buffer, mapping?: ExcelMappi
     ),
     immatriculation: columnNames.find(col => 
       /^immatriculation$/i.test(col.trim()) || 
-      /^plaque$/i.test(col.trim())
+      /^plaque$/i.test(col.trim()) ||
+      /^гос\.\s*номер$/i.test(col.trim()) ||
+      /^plate.*number$/i.test(col.trim())
     ),
     annee: columnNames.find(col => 
       /^annee$/i.test(col.trim()) || 
@@ -209,7 +211,7 @@ export function parseExcelToEquipements(fileBuffer: Buffer, mapping?: ExcelMappi
 
       const equipement: InsertEquipement = {
         nom,
-        type: categorie || 'Autre',
+        type: null,
         categorie: categorie || null,
         marque: null,
         modele: modele || null,

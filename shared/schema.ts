@@ -54,7 +54,7 @@ export const salaries = pgTable("salaries", {
 export const equipements = pgTable("equipements", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   nom: text("nom").notNull(),
-  type: text("type").notNull(),
+  type: text("type"),
   categorie: text("categorie"),
   marque: varchar("marque", { length: 100 }),
   modele: varchar("modele", { length: 100 }),

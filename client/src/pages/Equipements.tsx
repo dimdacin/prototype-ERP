@@ -138,6 +138,7 @@ export default function Equipements() {
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-3 font-medium">{t('equipements.id')}</th>
+                  <th className="text-left p-3 font-medium">{t('equipements.category')}</th>
                   <th className="text-left p-3 font-medium">{t('equipements.model')}</th>
                   <th className="text-left p-3 font-medium">{t('equipements.year')}</th>
                   <th className="text-left p-3 font-medium">{t('equipements.plateNumber')}</th>
@@ -156,8 +157,8 @@ export default function Equipements() {
                   <tr key={equipement.id} className="border-b hover-elevate" data-testid={`equipement-row-${equipement.id}`}>
                     <td className="p-3">
                       <div className="font-medium font-mono">{equipement.numeroSerie || equipement.nom}</div>
-                      <div className="text-sm text-muted-foreground">{equipement.type}</div>
                     </td>
+                    <td className="p-3 text-sm">{equipement.categorie || <span className="text-muted-foreground">-</span>}</td>
                     <td className="p-3 text-sm">{equipement.modele || "-"}</td>
                     <td className="p-3 text-sm">{equipement.year || <span className="text-muted-foreground">-</span>}</td>
                     <td className="p-3 text-sm font-mono">{equipement.immatriculation || "-"}</td>

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface BudgetData {
   prevu: {
@@ -61,15 +62,6 @@ interface ChantierOverviewProps {
 
 export default function ChantierOverview({ chantier, responsable, budget, completude }: ChantierOverviewProps) {
   const { t, i18n } = useTranslation();
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
 
   // Prepare chart data
   const chartData = [
@@ -174,7 +166,7 @@ export default function ChantierOverview({ chantier, responsable, budget, comple
                 <XAxis dataKey="category" className="text-muted-foreground" />
                 <YAxis className="text-muted-foreground" />
                 <Tooltip
-                  formatter={(value: number) => formatCurrency(value)}
+                  formatter={(value: number) => formatCurrency(value, { locale: i18n.language })}
                   contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
                 />
                 <Legend />
@@ -186,9 +178,9 @@ export default function ChantierOverview({ chantier, responsable, budget, comple
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <div className="text-center">
               <p className="text-sm text-muted-foreground">{t('chantiers.totalBudget')}</p>
-              <p className="text-2xl font-bold" data-testid="text-budget-total">{formatCurrency(budget.prevu.total)}</p>
+              <p className="text-2xl font-bold" data-testid="text-budget-total">{formatCurrency(budget.prevu.total, { locale: i18n.language })}</p>
               <p className="text-sm text-muted-foreground" data-testid="text-budget-reel">
-                {t('dashboard.actual')}: {formatCurrency(budget.reel.total)}
+                {t('dashboard.actual')}: {formatCurrency(budget.reel.total, { locale: i18n.language })}
               </p>
             </div>
             <div className="text-center">
@@ -197,7 +189,7 @@ export default function ChantierOverview({ chantier, responsable, budget, comple
                 className={`text-2xl font-bold ${budget.ecarts.total > 0 ? 'text-destructive' : budget.ecarts.total < 0 ? 'text-green-600 dark:text-green-400' : ''}`}
                 data-testid="text-budget-ecart"
               >
-                {formatCurrency(budget.ecarts.total)}
+                {formatCurrency(budget.ecarts.total, { locale: i18n.language })}
               </p>
               <p className="text-sm text-muted-foreground">
                 {budget.prevu.total > 0 

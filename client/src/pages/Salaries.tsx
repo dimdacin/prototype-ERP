@@ -29,6 +29,7 @@ import { insertSalarieSchema } from "@shared/schema";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { formatCurrency } from "@/lib/utils";
 
 const editSalarieSchema = insertSalarieSchema.partial().extend({
   id: z.string(),
@@ -72,15 +73,6 @@ export default function Salaries() {
       });
     },
   });
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
 
   const getStatutBadge = (statut: string) => {
     switch (statut) {
@@ -313,7 +305,7 @@ export default function Salaries() {
                     <td className="p-3 text-sm">{salarie.services || <span className="text-muted-foreground">-</span>}</td>
                     <td className="p-3 text-sm text-muted-foreground">{salarie.coastCenter || "-"}</td>
                     <td className="p-3 text-sm font-mono">
-                      {salarie.tauxHoraire ? formatCurrency(parseFloat(salarie.tauxHoraire)) : "-"}
+                      {formatCurrency(salarie.tauxHoraire, { locale: i18n.language })}
                     </td>
                     <td className="p-3">{getStatutBadge(salarie.statut)}</td>
                     <td className="p-3">
@@ -451,7 +443,7 @@ export default function Salaries() {
                   name="tauxHoraire"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('salaries.hourlyRate')} (€)</FormLabel>
+                      <FormLabel>{t('salaries.hourlyRate')} (lei)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -471,7 +463,7 @@ export default function Salaries() {
                   name="salaryMonth"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('salaries.monthlySalary')} (€)</FormLabel>
+                      <FormLabel>{t('salaries.monthlySalary')} (lei)</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 

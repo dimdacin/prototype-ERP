@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "wouter";
+import { formatCurrency } from "@/lib/utils";
 
 interface Project {
   id: string;
@@ -34,15 +35,6 @@ interface ProjectsTableProps {
 export default function ProjectsTable({ projects }: ProjectsTableProps) {
   const { t, i18n } = useTranslation();
   const [, setLocation] = useLocation();
-  
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
   
   const statusConfig = {
     en_cours: { label: t('chantiers.inProgress'), variant: "default" as const },
@@ -94,7 +86,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                 </TableCell>
                 <TableCell className="text-right" data-testid={`text-variance-${project.id}`}>
                   <div className={`font-medium ${varianceAmount > 0 ? 'text-destructive' : varianceAmount < 0 ? 'text-green-600 dark:text-green-400' : ''}`}>
-                    {formatCurrency(varianceAmount)}
+                    {formatCurrency(varianceAmount, { locale: i18n.language })}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {variance > 0 ? '+' : ''}{variance.toFixed(1)}%

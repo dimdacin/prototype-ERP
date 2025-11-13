@@ -7,29 +7,13 @@ import { useQuery } from "@tanstack/react-query";
 import type { Equipement } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import ImportEquipmentDialog from "@/components/ImportEquipmentDialog";
+import { formatCurrency } from "@/lib/utils";
 
 export default function Equipements() {
   const { t, i18n } = useTranslation();
   const { data: equipements, isLoading } = useQuery<Equipement[]>({
     queryKey: ["/api/equipements"],
   });
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
-
-  const formatFuelConsumption = (value: number) => {
-    const formatted = new Intl.NumberFormat(i18n.language, {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }).format(value);
-    return `${formatted} ${t('equipements.fuelUnit')}`;
-  };
 
   const getStatutBadge = (statut: string) => {
     switch (statut) {
@@ -183,13 +167,13 @@ export default function Equipements() {
                       {!equipement.gpsUnit && !equipement.meterUnit && "-"}
                     </td>
                     <td className="p-3 text-sm font-mono">
-                      {equipement.hourlyRate !== undefined && equipement.hourlyRate !== null ? `${equipement.hourlyRate} lei` : <span className="text-muted-foreground">-</span>}
+                      {formatCurrency(equipement.hourlyRate, { locale: i18n.language })}
                     </td>
                     <td className="p-3 text-sm">
                       {equipement.fuelConsumption !== undefined && equipement.fuelConsumption !== null ? `${equipement.fuelConsumption} L/100km` : <span className="text-muted-foreground">-</span>}
                     </td>
                     <td className="p-3 text-sm">
-                      {equipement.maintenanceCost !== undefined && equipement.maintenanceCost !== null ? `${equipement.maintenanceCost} lei/an` : <span className="text-muted-foreground">-</span>}
+                      {formatCurrency(equipement.maintenanceCost, { locale: i18n.language })}
                     </td>
                     <td className="p-3">{getStatutBadge(equipement.statut)}</td>
                     <td className="p-3">

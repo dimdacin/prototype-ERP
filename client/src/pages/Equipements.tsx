@@ -1,20 +1,46 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Download, Wrench, Upload } from "lucide-react";
+import { Plus, Search, Download, Wrench, Upload, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import type { Equipement } from "@shared/schema";
 import { useTranslation } from "react-i18next";
+import { useState, useMemo } from "react";
 import ImportEquipmentDialog from "@/components/ImportEquipmentDialog";
 import CategoryFamilyCards from "@/components/CategoryFamilyCards";
 import { formatCurrency } from "@/lib/utils";
 
+const FAMILY_CATEGORIES: Record<string, string[]> = {
+  engins_chantier: ["Compactoare", "Incarcatoare frontale", "Finisoare", "Excavatoare", "Autogredere", "Tractoare", "Freze"],
+  transport_lourd: ["S/REMOCI", "Parcul auto", "S/REMOCI Trall"],
+  transport_leger: ["Autoparc intern", "Autoturizme", "Microbuse", "Personnel"],
+  specialises: ["Tehnica specializata", "Automacarale", "Reciclator"],
+  petite_mecanisation: ["м. механизация"]
+};
+
 export default function Equipements() {
   const { t, i18n } = useTranslation();
-  const { data: equipements, isLoading } = useQuery<Equipement[]>({
+  const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
+  
+  const { data: allEquipements, isLoading } = useQuery<Equipement[]>({
     queryKey: ["/api/equipements"],
   });
+
+  const equipements = useMemo(() => {
+    if (!selectedFamily || !allEquipements) return allEquipements;
+    
+    const familyCategories = FAMILY_CATEGORIES[selectedFamily];
+    return allEquipements.filter(eq => 
+      familyCategories.some(cat => 
+        cat.toLowerCase().trim() === (eq.categorie || '').toLowerCase().trim()
+      )
+    );
+  }, [selectedFamily, allEquipements]);
+
+  const handleFamilyClick = (familyId: string) => {
+    setSelectedFamily(prev => prev === familyId ? null : familyId);
+  };
 
   const getStatutBadge = (statut: string) => {
     switch (statut) {
@@ -67,7 +93,24 @@ export default function Equipements() {
         </div>
       </div>
 
-      <CategoryFamilyCards />
+      <div className="space-y-4">
+        <CategoryFamilyCards onFamilyClick={handleFamilyClick} selectedFamily={selectedFamily} />
+        {selectedFamily && (
+          <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-md">
+            <span className="text-sm text-muted-foreground">
+              Filtré par: <span className="font-medium">{t(`equipements.families.${selectedFamily}`)}</span>
+            </span>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setSelectedFamily(null)}
+              data-testid="button-clear-filter"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
 
       <Card>
         <CardHeader>

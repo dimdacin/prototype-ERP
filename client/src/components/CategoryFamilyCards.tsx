@@ -14,6 +14,7 @@ interface CategoryStats {
 
 interface CategoryFamilyCardsProps {
   onFamilyClick?: (familyId: string) => void;
+  selectedFamily?: string | null;
 }
 
 const FAMILY_DEFINITIONS = {
@@ -49,7 +50,7 @@ const FAMILY_DEFINITIONS = {
   }
 };
 
-export default function CategoryFamilyCards({ onFamilyClick }: CategoryFamilyCardsProps) {
+export default function CategoryFamilyCards({ onFamilyClick, selectedFamily }: CategoryFamilyCardsProps) {
   const { t } = useTranslation();
   
   const { data: statsByCategory, isLoading } = useQuery<Record<string, CategoryStats>>({
@@ -81,9 +82,13 @@ export default function CategoryFamilyCards({ onFamilyClick }: CategoryFamilyCar
     let totalAvailable = 0;
     let totalMaintenance = 0;
     let totalOutOfService = 0;
+    let sumCostPerHour = 0;
+    let sumCostPer100km = 0;
+    let countCostPerHour = 0;
+    let countCostPer100km = 0;
 
     if (!statsByCategory) {
-      return { count: 0, available: 0, maintenance: 0, outOfService: 0 };
+      return { count: 0, available: 0, maintenance: 0, outOfService: 0, avgCostPerHour: null, avgCostPer100km: null };
     }
 
     Object.keys(statsByCategory).forEach(category => {
@@ -98,6 +103,16 @@ export default function CategoryFamilyCards({ onFamilyClick }: CategoryFamilyCar
         totalAvailable += stats.available;
         totalMaintenance += stats.maintenance;
         totalOutOfService += stats.outOfService;
+        
+        if (stats.avgCostPerHour !== null) {
+          sumCostPerHour += stats.avgCostPerHour;
+          countCostPerHour++;
+        }
+        
+        if (stats.avgCostPer100km !== null) {
+          sumCostPer100km += stats.avgCostPer100km;
+          countCostPer100km++;
+        }
       }
     });
 
@@ -106,6 +121,8 @@ export default function CategoryFamilyCards({ onFamilyClick }: CategoryFamilyCar
       available: totalAvailable,
       maintenance: totalMaintenance,
       outOfService: totalOutOfService,
+      avgCostPerHour: countCostPerHour > 0 ? sumCostPerHour / countCostPerHour : null,
+      avgCostPer100km: countCostPer100km > 0 ? sumCostPer100km / countCostPer100km : null,
     };
   };
 
@@ -115,10 +132,12 @@ export default function CategoryFamilyCards({ onFamilyClick }: CategoryFamilyCar
         const Icon = familyDef.icon;
         const stats = aggregateFamily(familyId);
         
+        const isSelected = selectedFamily === familyId;
+        
         return (
           <Card 
             key={familyId}
-            className={`hover-elevate cursor-pointer ${familyDef.bgColor}`}
+            className={`hover-elevate cursor-pointer ${familyDef.bgColor} ${isSelected ? 'ring-2 ring-primary' : ''}`}
             onClick={() => onFamilyClick?.(familyId)}
             data-testid={`family-card-${familyId}`}
           >
@@ -131,6 +150,18 @@ export default function CategoryFamilyCards({ onFamilyClick }: CategoryFamilyCar
             <CardContent>
               <div className="text-2xl font-bold mb-2">{stats.count}</div>
               <div className="text-xs space-y-0.5">
+                {stats.avgCostPerHour !== null && (
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-muted-foreground">Coût/h:</span>
+                    <span className="font-semibold">{stats.avgCostPerHour.toFixed(0)} lei</span>
+                  </div>
+                )}
+                {stats.avgCostPer100km !== null && (
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="text-muted-foreground">Coût/100km:</span>
+                    <span className="font-semibold">{stats.avgCostPer100km.toFixed(0)} lei</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">{t('equipements.available')}</span>
                   <span className="font-medium text-green-600">{stats.available}</span>

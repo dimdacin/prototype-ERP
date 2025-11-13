@@ -207,6 +207,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         outOfService: number;
         avgCostPerHour: number | null;
         avgCostPer100km: number | null;
+        totalCostPerHour: number;
+        totalCostPer100km: number;
+        countPerHour: number;
+        countPer100km: number;
       }> = {};
       
       equipements.forEach(eq => {
@@ -219,6 +223,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
             outOfService: 0,
             avgCostPerHour: null,
             avgCostPer100km: null,
+            totalCostPerHour: 0,
+            totalCostPer100km: 0,
+            countPerHour: 0,
+            countPer100km: 0,
           };
         }
         
@@ -227,6 +235,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (eq.statut === 'disponible') statsByCategory[cat].available++;
         else if (eq.statut === 'maintenance') statsByCategory[cat].maintenance++;
         else if (eq.statut === 'hors_service') statsByCategory[cat].outOfService++;
+        
+        // Accumulate costs based on unit type
+        if (eq.coutUsage1hLei !== undefined && eq.coutUsage1hLei !== null) {
+          const cost = typeof eq.coutUsage1hLei === 'string' ? parseFloat(eq.coutUsage1hLei) : eq.coutUsage1hLei;
+          if (!isNaN(cost) && cost > 0) {
+            statsByCategory[cat].totalCostPerHour += cost;
+            statsByCategory[cat].countPerHour++;
+          }
+        }
+        
+        if (eq.coutUsage100kmLei !== undefined && eq.coutUsage100kmLei !== null) {
+          const cost = typeof eq.coutUsage100kmLei === 'string' ? parseFloat(eq.coutUsage100kmLei) : eq.coutUsage100kmLei;
+          if (!isNaN(cost) && cost > 0) {
+            statsByCategory[cat].totalCostPer100km += cost;
+            statsByCategory[cat].countPer100km++;
+          }
+        }
+      });
+      
+      // Calculate averages
+      Object.values(statsByCategory).forEach(stats => {
+        if (stats.countPerHour > 0) {
+          stats.avgCostPerHour = stats.totalCostPerHour / stats.countPerHour;
+        }
+        if (stats.countPer100km > 0) {
+          stats.avgCostPer100km = stats.totalCostPer100km / stats.countPer100km;
+        }
+        // Remove temporary fields from response
+        delete (stats as any).totalCostPerHour;
+        delete (stats as any).totalCostPer100km;
+        delete (stats as any).countPerHour;
+        delete (stats as any).countPer100km;
       });
       
       res.json(statsByCategory);

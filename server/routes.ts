@@ -6,8 +6,10 @@ import * as XLSX from 'xlsx';
 import { parseExcelToEquipements } from "./import";
 import { 
   insertChantierSchema, insertSalarieSchema, insertEquipementSchema,
-  insertAffectationSalarieSchema, insertAffectationEquipementSchema, insertDepenseSchema
+  insertAffectationSalarieSchema, insertAffectationEquipementSchema, insertDepenseSchema,
+  insertEtapeChantierSchema, insertDocumentChantierSchema
 } from "@shared/schema";
+import { getChantierDetails } from "./services/chantier-details";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -32,6 +34,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(chantier);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch chantier" });
+    }
+  });
+
+  app.get("/api/chantiers/:id/details", async (req, res) => {
+    try {
+      const details = await getChantierDetails(req.params.id);
+      if (!details) {
+        return res.status(404).json({ error: "Chantier not found" });
+      }
+      res.json(details);
+    } catch (error) {
+      console.error("Error fetching chantier details:", error);
+      res.status(500).json({ error: "Failed to fetch chantier details" });
     }
   });
 
@@ -325,6 +340,114 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to upload invoice photo" });
+    }
+  });
+
+  // ========== ÉTAPES CHANTIER ROUTES ==========
+  app.get("/api/chantiers/:id/etapes", async (req, res) => {
+    try {
+      const etapes = await storage.getEtapesByChantier(req.params.id);
+      res.json(etapes);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch etapes" });
+    }
+  });
+
+  app.post("/api/chantiers/:id/etapes", async (req, res) => {
+    try {
+      const validated = insertEtapeChantierSchema.parse({
+        ...req.body,
+        chantierId: req.params.id
+      });
+      const etape = await storage.createEtapeChantier(validated);
+      res.status(201).json(etape);
+    } catch (error) {
+      res.status(400).json({ error: "Invalid etape data" });
+    }
+  });
+
+  app.patch("/api/etapes/:id", async (req, res) => {
+    try {
+      // Validate partial update with Zod
+      const partialSchema = insertEtapeChantierSchema.partial();
+      const validated = partialSchema.parse(req.body);
+      
+      const etape = await storage.updateEtapeChantier(req.params.id, validated);
+      if (!etape) {
+        return res.status(404).json({ error: "Etape not found" });
+      }
+      res.json(etape);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'ZodError') {
+        return res.status(400).json({ error: "Invalid etape data" });
+      }
+      res.status(500).json({ error: "Failed to update etape" });
+    }
+  });
+
+  app.delete("/api/etapes/:id", async (req, res) => {
+    try {
+      await storage.deleteEtapeChantier(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete etape" });
+    }
+  });
+
+  // ========== DOCUMENTS CHANTIER ROUTES ==========
+  app.get("/api/chantiers/:id/documents", async (req, res) => {
+    try {
+      const documents = await storage.getDocumentsByChantier(req.params.id);
+      res.json(documents);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch documents" });
+    }
+  });
+
+  app.post("/api/chantiers/:id/documents", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "Aucun fichier fourni" });
+      }
+
+      const { categorie, description, uploadePar } = req.body;
+      if (!categorie) {
+        return res.status(400).json({ error: "Catégorie requise" });
+      }
+
+      const originalName = req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const timestamp = Date.now();
+      const filename = `doc_${timestamp}_${originalName}`;
+      
+      // Store file as base64 data URL (for demo - in production use cloud storage)
+      const base64Data = req.file.buffer.toString('base64');
+      const dataUrl = `data:${req.file.mimetype};base64,${base64Data}`;
+
+      const validated = insertDocumentChantierSchema.parse({
+        chantierId: req.params.id,
+        nom: req.file.originalname,
+        categorie,
+        cheminFichier: dataUrl,
+        typeMime: req.file.mimetype,
+        taille: req.file.size,
+        uploadePar,
+        description
+      });
+
+      const document = await storage.createDocumentChantier(validated);
+      res.status(201).json(document);
+    } catch (error) {
+      console.error("Error uploading document:", error);
+      res.status(500).json({ error: "Failed to upload document" });
+    }
+  });
+
+  app.delete("/api/documents/:id", async (req, res) => {
+    try {
+      await storage.deleteDocumentChantier(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete document" });
     }
   });
 

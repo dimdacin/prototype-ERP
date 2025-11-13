@@ -135,6 +135,32 @@ export const depenses = pgTable("depenses", {
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 
+export const etapesChantier = pgTable("etapes_chantier", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  chantierId: varchar("chantier_id").notNull().references(() => chantiers.id, { onDelete: "cascade" }),
+  nom: text("nom").notNull(),
+  description: text("description"),
+  dateDebut: date("date_debut"),
+  dateFin: date("date_fin"),
+  statut: varchar("statut", { length: 50 }).notNull().default("planifiee"),
+  progression: integer("progression").notNull().default(0),
+  ordre: integer("ordre").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const documentsChantier = pgTable("documents_chantier", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  chantierId: varchar("chantier_id").notNull().references(() => chantiers.id, { onDelete: "cascade" }),
+  nom: text("nom").notNull(),
+  categorie: varchar("categorie", { length: 100 }).notNull(),
+  cheminFichier: text("chemin_fichier").notNull(),
+  typeMime: varchar("type_mime", { length: 100 }),
+  taille: integer("taille"),
+  uploadePar: text("uploade_par"),
+  description: text("description"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
 });
@@ -185,6 +211,16 @@ export const insertDepenseSchema = createInsertSchema(depenses).omit({
   photoFacturePath: true,
 });
 
+export const insertEtapeChantierSchema = createInsertSchema(etapesChantier).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertDocumentChantierSchema = createInsertSchema(documentsChantier).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertUsine = z.infer<typeof insertUsineSchema>;
 export type Usine = typeof usines.$inferSelect;
 
@@ -211,3 +247,9 @@ export type AffectationEquipement = typeof affectationsEquipements.$inferSelect;
 
 export type InsertDepense = z.infer<typeof insertDepenseSchema>;
 export type Depense = typeof depenses.$inferSelect;
+
+export type InsertEtapeChantier = z.infer<typeof insertEtapeChantierSchema>;
+export type EtapeChantier = typeof etapesChantier.$inferSelect;
+
+export type InsertDocumentChantier = z.infer<typeof insertDocumentChantierSchema>;
+export type DocumentChantier = typeof documentsChantier.$inferSelect;

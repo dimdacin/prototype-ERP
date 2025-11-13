@@ -3,7 +3,7 @@ import { eq, desc } from "drizzle-orm";
 import { 
   users, chantiers, salaries, equipements, 
   affectationsSalaries, affectationsEquipements, depenses,
-  usines, stockItems,
+  usines, stockItems, etapesChantier, documentsChantier,
   type User, type InsertUser,
   type Chantier, type InsertChantier,
   type Salarie, type InsertSalarie,
@@ -12,7 +12,9 @@ import {
   type AffectationEquipement, type InsertAffectationEquipement,
   type Depense, type InsertDepense,
   type Usine, type InsertUsine,
-  type StockItem, type InsertStockItem
+  type StockItem, type InsertStockItem,
+  type EtapeChantier, type InsertEtapeChantier,
+  type DocumentChantier, type InsertDocumentChantier
 } from "@shared/schema";
 
 export interface IStorage {
@@ -74,6 +76,22 @@ export interface IStorage {
   createStockItem(stockItem: InsertStockItem): Promise<StockItem>;
   updateStockItem(id: string, stockItem: Partial<InsertStockItem>): Promise<StockItem | undefined>;
   deleteStockItem(id: string): Promise<void>;
+
+  // Étapes Chantier
+  getEtapesByChantier(chantierId: string): Promise<EtapeChantier[]>;
+  createEtapeChantier(etape: InsertEtapeChantier): Promise<EtapeChantier>;
+  updateEtapeChantier(id: string, etape: Partial<InsertEtapeChantier>): Promise<EtapeChantier | undefined>;
+  deleteEtapeChantier(id: string): Promise<void>;
+
+  // Documents Chantier
+  getDocumentsByChantier(chantierId: string): Promise<DocumentChantier[]>;
+  createDocumentChantier(document: InsertDocumentChantier): Promise<DocumentChantier>;
+  deleteDocumentChantier(id: string): Promise<void>;
+
+  // Enriched queries for details view
+  getResponsableInfo(responsableId: string): Promise<{ nom: string; prenom: string; } | undefined>;
+  getAffectationsSalariesEnriched(chantierId: string): Promise<Array<AffectationSalarie & { salarieNom: string; salariePrenom: string; tauxHoraire: string | null; }>>;
+  getAffectationsEquipementsEnriched(chantierId: string): Promise<Array<AffectationEquipement & { equipementNom: string; modele: string | null; coutJournalier: string | null; }>>;
 }
 
 export class DbStorage implements IStorage {
@@ -283,6 +301,96 @@ export class DbStorage implements IStorage {
 
   async deleteStockItem(id: string): Promise<void> {
     await db.delete(stockItems).where(eq(stockItems.id, id));
+  }
+
+  // Étapes Chantier
+  async getEtapesByChantier(chantierId: string): Promise<EtapeChantier[]> {
+    return await db.select().from(etapesChantier)
+      .where(eq(etapesChantier.chantierId, chantierId))
+      .orderBy(etapesChantier.ordre);
+  }
+
+  async createEtapeChantier(insertEtape: InsertEtapeChantier): Promise<EtapeChantier> {
+    const result = await db.insert(etapesChantier).values(insertEtape).returning();
+    return result[0];
+  }
+
+  async updateEtapeChantier(id: string, etape: Partial<InsertEtapeChantier>): Promise<EtapeChantier | undefined> {
+    const result = await db.update(etapesChantier).set(etape).where(eq(etapesChantier.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteEtapeChantier(id: string): Promise<void> {
+    await db.delete(etapesChantier).where(eq(etapesChantier.id, id));
+  }
+
+  // Documents Chantier
+  async getDocumentsByChantier(chantierId: string): Promise<DocumentChantier[]> {
+    return await db.select().from(documentsChantier)
+      .where(eq(documentsChantier.chantierId, chantierId))
+      .orderBy(desc(documentsChantier.createdAt));
+  }
+
+  async createDocumentChantier(insertDocument: InsertDocumentChantier): Promise<DocumentChantier> {
+    const result = await db.insert(documentsChantier).values(insertDocument).returning();
+    return result[0];
+  }
+
+  async deleteDocumentChantier(id: string): Promise<void> {
+    await db.delete(documentsChantier).where(eq(documentsChantier.id, id));
+  }
+
+  // Enriched queries for details view
+  async getResponsableInfo(responsableId: string): Promise<{ nom: string; prenom: string; } | undefined> {
+    const result = await db.select({
+      nom: salaries.nom,
+      prenom: salaries.prenom
+    })
+      .from(salaries)
+      .where(eq(salaries.id, responsableId))
+      .limit(1);
+    return result[0];
+  }
+
+  async getAffectationsSalariesEnriched(chantierId: string): Promise<Array<AffectationSalarie & { salarieNom: string; salariePrenom: string; tauxHoraire: string | null; }>> {
+    const result = await db.select({
+      id: affectationsSalaries.id,
+      chantierId: affectationsSalaries.chantierId,
+      salarieId: affectationsSalaries.salarieId,
+      dateDebut: affectationsSalaries.dateDebut,
+      dateFin: affectationsSalaries.dateFin,
+      heuresParJour: affectationsSalaries.heuresParJour,
+      notes: affectationsSalaries.notes,
+      createdAt: affectationsSalaries.createdAt,
+      salarieNom: salaries.nom,
+      salariePrenom: salaries.prenom,
+      tauxHoraire: salaries.tauxHoraire
+    })
+      .from(affectationsSalaries)
+      .innerJoin(salaries, eq(affectationsSalaries.salarieId, salaries.id))
+      .where(eq(affectationsSalaries.chantierId, chantierId))
+      .orderBy(desc(affectationsSalaries.dateDebut));
+    return result as any;
+  }
+
+  async getAffectationsEquipementsEnriched(chantierId: string): Promise<Array<AffectationEquipement & { equipementNom: string; modele: string | null; coutJournalier: string | null; }>> {
+    const result = await db.select({
+      id: affectationsEquipements.id,
+      chantierId: affectationsEquipements.chantierId,
+      equipementId: affectationsEquipements.equipementId,
+      dateDebut: affectationsEquipements.dateDebut,
+      dateFin: affectationsEquipements.dateFin,
+      notes: affectationsEquipements.notes,
+      createdAt: affectationsEquipements.createdAt,
+      equipementNom: equipements.nom,
+      modele: equipements.modele,
+      coutJournalier: equipements.coutJournalier
+    })
+      .from(affectationsEquipements)
+      .innerJoin(equipements, eq(affectationsEquipements.equipementId, equipements.id))
+      .where(eq(affectationsEquipements.chantierId, chantierId))
+      .orderBy(desc(affectationsEquipements.dateDebut));
+    return result as any;
   }
 }
 

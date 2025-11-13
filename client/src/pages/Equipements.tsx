@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Equipement } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import ImportEquipmentDialog from "@/components/ImportEquipmentDialog";
+import CategoryFamilyCards from "@/components/CategoryFamilyCards";
 import { formatCurrency } from "@/lib/utils";
 
 export default function Equipements() {
@@ -66,47 +67,7 @@ export default function Equipements() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('equipements.totalEquipment')}</CardTitle>
-            <Wrench className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{equipements?.length || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('equipements.available')}</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-green-600"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{equipementsDisponibles}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('equipements.inService')}</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{equipementsEnService}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('equipements.maintenance')}</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-orange-600"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{equipementsMaintenance}</div>
-          </CardContent>
-        </Card>
-      </div>
+      <CategoryFamilyCards />
 
       <Card>
         <CardHeader>

@@ -185,7 +185,14 @@
     "importationSuccess": "Импорт успешен",
     "equipmentsImported": "оборудование успешно импортировано",
     "importationError": "Ошибка импорта",
-    "errors": "Ошибки"
+    "errors": "Ошибки",
+    "families": {
+      "engins_chantier": "Строительная техника",
+      "transport_lourd": "Грузовой транспорт",
+      "transport_leger": "Легкий транспорт",
+      "specialises": "Специализированная техника",
+      "petite_mecanisation": "Малая механизация"
+    }
   },
   "achats": {
     "title": "Закупки/Запасы",

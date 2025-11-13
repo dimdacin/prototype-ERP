@@ -185,7 +185,14 @@
     "importationSuccess": "Importation réussie",
     "equipmentsImported": "équipement(s) importé(s) avec succès",
     "importationError": "Erreur d'importation",
-    "errors": "Erreurs"
+    "errors": "Erreurs",
+    "families": {
+      "engins_chantier": "Engins de chantier",
+      "transport_lourd": "Transport lourd",
+      "transport_leger": "Transport léger",
+      "specialises": "Spécialisés",
+      "petite_mecanisation": "Petite mécanisation"
+    }
   },
   "achats": {
     "title": "Achat/Stocks",

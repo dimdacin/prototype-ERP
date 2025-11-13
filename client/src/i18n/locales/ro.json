@@ -185,7 +185,14 @@
     "importationSuccess": "Import reușit",
     "equipmentsImported": "echipamente importate cu succes",
     "importationError": "Eroare de import",
-    "errors": "Erori"
+    "errors": "Erori",
+    "families": {
+      "engins_chantier": "Echipamente de șantier",
+      "transport_lourd": "Transport greu",
+      "transport_leger": "Transport ușor",
+      "specialises": "Echipamente specializate",
+      "petite_mecanisation": "Mecanizare mică"
+    }
   },
   "achats": {
     "title": "Achiziții/Stocuri",

@@ -203,7 +203,22 @@
     "editSuccess": "Équipement modifié avec succès",
     "editError": "Erreur lors de la modification",
     "selectDriver": "Sélectionner un conducteur",
-    "noDriver": "Aucun conducteur"
+    "noDriver": "Aucun conducteur",
+    "hourlySalRateLei": "Taux horaire (lei)",
+    "hourlySalAllinLei": "Taux horaire TTC (lei)",
+    "totalSalaryLeiHut": "Salaire total (lei/h)",
+    "usageWorkcostLeiH": "Coût d'usage (lei/h)",
+    "usageCostAllinH": "Coût usage TTC (lei/h)",
+    "usageCostAllin100km": "Coût usage (lei/100km)",
+    "fuelPriceLeiL": "Prix carburant (lei/L)",
+    "balanceValueLei": "Valeur bilan (lei)",
+    "usefulLifeYears": "Durée de vie (ans)",
+    "residualValueLei": "Valeur résiduelle (lei)",
+    "depreciableValueLei": "Valeur amortissable (lei)",
+    "annualDepreciationRate": "Taux amortissement annuel",
+    "totalDepreciationLei": "Amortissement total (lei)",
+    "notes": "Notes",
+    "category": "Catégorie"
   },
   "achats": {
     "title": "Achat/Stocks",

@@ -203,7 +203,22 @@
     "editSuccess": "Echipament modificat cu succes",
     "editError": "Eroare la modificare",
     "selectDriver": "Selectați șoferul",
-    "noDriver": "Fără șofer"
+    "noDriver": "Fără șofer",
+    "hourlySalRateLei": "Tarif orar (lei)",
+    "hourlySalAllinLei": "Tarif orar total (lei)",
+    "totalSalaryLeiHut": "Salariu total (lei/h)",
+    "usageWorkcostLeiH": "Cost utilizare (lei/h)",
+    "usageCostAllinH": "Cost total utilizare (lei/h)",
+    "usageCostAllin100km": "Cost utilizare (lei/100km)",
+    "fuelPriceLeiL": "Preț combustibil (lei/L)",
+    "balanceValueLei": "Valoare bilanț (lei)",
+    "usefulLifeYears": "Durată de viață (ani)",
+    "residualValueLei": "Valoare reziduală (lei)",
+    "depreciableValueLei": "Valoare amortizabilă (lei)",
+    "annualDepreciationRate": "Rată amortizare anuală",
+    "totalDepreciationLei": "Amortizare totală (lei)",
+    "notes": "Notițe",
+    "category": "Categorie"
   },
   "achats": {
     "title": "Achiziții/Stocuri",

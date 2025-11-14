@@ -203,7 +203,22 @@
     "editSuccess": "Оборудование успешно изменено",
     "editError": "Ошибка при изменении",
     "selectDriver": "Выбрать водителя",
-    "noDriver": "Без водителя"
+    "noDriver": "Без водителя",
+    "hourlySalRateLei": "Почасовая ставка (леи)",
+    "hourlySalAllinLei": "Полная ставка (леи)",
+    "totalSalaryLeiHut": "Общая зарплата (леи/ч)",
+    "usageWorkcostLeiH": "Стоимость работы (леи/ч)",
+    "usageCostAllinH": "Полная стоимость (леи/ч)",
+    "usageCostAllin100km": "Стоимость (леи/100км)",
+    "fuelPriceLeiL": "Цена топлива (леи/л)",
+    "balanceValueLei": "Балансовая стоимость (леи)",
+    "usefulLifeYears": "Срок службы (лет)",
+    "residualValueLei": "Остаточная стоимость (леи)",
+    "depreciableValueLei": "Амортизируемая стоимость (леи)",
+    "annualDepreciationRate": "Годовая норма амортизации",
+    "totalDepreciationLei": "Общая амортизация (леи)",
+    "notes": "Примечания",
+    "category": "Категория"
   },
   "achats": {
     "title": "Закупки/Запасы",

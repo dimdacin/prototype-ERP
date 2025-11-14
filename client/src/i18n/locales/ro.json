@@ -192,7 +192,12 @@
       "transport_leger": "Transport ușor",
       "specialises": "Echipamente specializate",
       "petite_mecanisation": "Mecanizare mică"
-    }
+    },
+    "columns": "Coloane",
+    "selectColumns": "Selectați coloanele",
+    "filterByCategory": "Filtrare după categorie",
+    "searchCategory": "Căutare categorie...",
+    "noCategoryFound": "Categorie negăsită"
   },
   "achats": {
     "title": "Achiziții/Stocuri",
@@ -274,7 +279,10 @@
     "description": "Descriere",
     "actions": "Acțiuni",
     "na": "Neaplicabil",
-    "noData": "Fără date"
+    "noData": "Fără date",
+    "reset": "Resetare",
+    "clearAll": "Șterge tot",
+    "required": "obligatoriu"
   },
   "languages": {
     "fr": "Français",

@@ -192,7 +192,12 @@
       "transport_leger": "Легкий транспорт",
       "specialises": "Специализированная техника",
       "petite_mecanisation": "Малая механизация"
-    }
+    },
+    "columns": "Колонки",
+    "selectColumns": "Выбрать колонки",
+    "filterByCategory": "Фильтр по категории",
+    "searchCategory": "Поиск категории...",
+    "noCategoryFound": "Категория не найдена"
   },
   "achats": {
     "title": "Закупки/Запасы",
@@ -274,7 +279,10 @@
     "description": "Описание",
     "actions": "Действия",
     "na": "Не применимо",
-    "noData": "Нет данных"
+    "noData": "Нет данных",
+    "reset": "Сбросить",
+    "clearAll": "Очистить все",
+    "required": "обязательно"
   },
   "languages": {
     "fr": "Français",

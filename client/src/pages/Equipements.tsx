@@ -10,6 +10,9 @@ import { useState, useMemo } from "react";
 import ImportEquipmentDialog from "@/components/ImportEquipmentDialog";
 import CategoryFamilyCards from "@/components/CategoryFamilyCards";
 import { formatCurrency } from "@/lib/utils";
+import ColumnSelector from "@/components/ColumnSelector";
+import CategoryFilter from "@/components/CategoryFilter";
+import { useColumnVisibility, type ColumnDef } from "@/hooks/useColumnVisibility";
 
 const FAMILY_CATEGORIES: Record<string, string[]> = {
   engins_chantier: ["Compactoare", "Incarcatoare frontale", "Finisoare", "Excavatoare", "Autogredere", "Tractoare", "Freze"],
@@ -19,24 +22,66 @@ const FAMILY_CATEGORIES: Record<string, string[]> = {
   petite_mecanisation: ["м. механизация"]
 };
 
+const COLUMN_DEFINITIONS: ColumnDef[] = [
+  { id: 'id', labelKey: 'equipements.id', mandatory: true, defaultVisible: true },
+  { id: 'category', labelKey: 'equipements.category', defaultVisible: true },
+  { id: 'model', labelKey: 'equipements.model', defaultVisible: true },
+  { id: 'year', labelKey: 'equipements.year', defaultVisible: true },
+  { id: 'plateNumber', labelKey: 'equipements.plateNumber', defaultVisible: true },
+  { id: 'fuelType', labelKey: 'equipements.fuelType', defaultVisible: false },
+  { id: 'driver', labelKey: 'equipements.driver', defaultVisible: true },
+  { id: 'gpsUnit', labelKey: 'equipements.gpsUnit', defaultVisible: false },
+  { id: 'hourlyRate', labelKey: 'equipements.hourlyRate', defaultVisible: true },
+  { id: 'fuelConsumption', labelKey: 'equipements.fuelConsumption', defaultVisible: false },
+  { id: 'maintenanceCost', labelKey: 'equipements.maintenanceCost', defaultVisible: false },
+  { id: 'status', labelKey: 'equipements.status', defaultVisible: true },
+  { id: 'actions', labelKey: 'equipements.actions', mandatory: true, defaultVisible: true },
+];
+
 export default function Equipements() {
   const { t, i18n } = useTranslation();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const { columnVisibility, setColumnVisibility, resetToDefaults } = useColumnVisibility(
+    COLUMN_DEFINITIONS, 
+    'equipements-column-visibility'
+  );
   
   const { data: allEquipements, isLoading } = useQuery<Equipement[]>({
     queryKey: ["/api/equipements"],
   });
 
+  const availableCategories = useMemo(() => {
+    if (!allEquipements) return [];
+    const categories = new Set<string>();
+    allEquipements.forEach(eq => {
+      if (eq.categorie) categories.add(eq.categorie);
+    });
+    return Array.from(categories).sort();
+  }, [allEquipements]);
+
   const equipements = useMemo(() => {
-    if (!selectedFamily || !allEquipements) return allEquipements;
+    if (!allEquipements) return allEquipements;
     
-    const familyCategories = FAMILY_CATEGORIES[selectedFamily];
-    return allEquipements.filter(eq => 
-      familyCategories.some(cat => 
-        cat.toLowerCase().trim() === (eq.categorie || '').toLowerCase().trim()
-      )
-    );
-  }, [selectedFamily, allEquipements]);
+    let filtered = allEquipements;
+    
+    if (selectedFamily) {
+      const familyCategories = FAMILY_CATEGORIES[selectedFamily];
+      filtered = filtered.filter(eq => 
+        familyCategories.some(cat => 
+          cat.toLowerCase().trim() === (eq.categorie || '').toLowerCase().trim()
+        )
+      );
+    }
+    
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(eq => 
+        selectedCategories.includes(eq.categorie || '')
+      );
+    }
+    
+    return filtered;
+  }, [selectedFamily, selectedCategories, allEquipements]);
 
   const handleFamilyClick = (familyId: string) => {
     setSelectedFamily(prev => prev === familyId ? null : familyId);
@@ -56,6 +101,87 @@ export default function Equipements() {
         return <Badge>{statut}</Badge>;
     }
   };
+
+  const renderCell = (columnId: string, equipement: Equipement) => {
+    switch (columnId) {
+      case 'id':
+        return (
+          <td className="p-3" key="id">
+            <div className="font-medium font-mono">{equipement.numeroSerie || equipement.nom}</div>
+          </td>
+        );
+      case 'category':
+        return (
+          <td className="p-3 text-sm" key="category">
+            {equipement.categorie || <span className="text-muted-foreground">-</span>}
+          </td>
+        );
+      case 'model':
+        return <td className="p-3 text-sm" key="model">{equipement.modele || "-"}</td>;
+      case 'year':
+        return (
+          <td className="p-3 text-sm" key="year">
+            {equipement.year || <span className="text-muted-foreground">-</span>}
+          </td>
+        );
+      case 'plateNumber':
+        return <td className="p-3 text-sm font-mono" key="plateNumber">{equipement.immatriculation || "-"}</td>;
+      case 'fuelType':
+        return (
+          <td className="p-3 text-sm" key="fuelType">
+            {equipement.fuelType || <span className="text-muted-foreground">-</span>}
+          </td>
+        );
+      case 'driver':
+        return (
+          <td className="p-3 text-sm" key="driver">
+            {equipement.operatorName || <span className="text-muted-foreground">-</span>}
+          </td>
+        );
+      case 'gpsUnit':
+        return (
+          <td className="p-3 text-xs text-muted-foreground" key="gpsUnit">
+            {equipement.gpsUnit && <div>GPS: {equipement.gpsUnit}</div>}
+            {equipement.meterUnit && <div>Cpt: {equipement.meterUnit}</div>}
+            {!equipement.gpsUnit && !equipement.meterUnit && "-"}
+          </td>
+        );
+      case 'hourlyRate':
+        return (
+          <td className="p-3 text-sm font-mono" key="hourlyRate">
+            {formatCurrency(equipement.hourlyRate, { locale: i18n.language })}
+          </td>
+        );
+      case 'fuelConsumption':
+        return (
+          <td className="p-3 text-sm" key="fuelConsumption">
+            {equipement.fuelConsumption !== undefined && equipement.fuelConsumption !== null 
+              ? `${equipement.fuelConsumption} L/100km` 
+              : <span className="text-muted-foreground">-</span>}
+          </td>
+        );
+      case 'maintenanceCost':
+        return (
+          <td className="p-3 text-sm" key="maintenanceCost">
+            {formatCurrency(equipement.maintenanceCost, { locale: i18n.language })}
+          </td>
+        );
+      case 'status':
+        return <td className="p-3" key="status">{getStatutBadge(equipement.statut)}</td>;
+      case 'actions':
+        return (
+          <td className="p-3" key="actions">
+            <Button variant="ghost" size="sm" data-testid={`button-edit-${equipement.id}`}>
+              {t('common.edit')}
+            </Button>
+          </td>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const visibleColumns = COLUMN_DEFINITIONS.filter(col => columnVisibility[col.id] !== false);
 
   if (isLoading) {
     return (
@@ -113,7 +239,7 @@ export default function Equipements() {
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="space-y-4">
           <div className="flex items-center justify-between">
             <CardTitle>{t('equipements.equipmentList')}</CardTitle>
             <div className="flex items-center gap-2">
@@ -125,6 +251,17 @@ export default function Equipements() {
                   data-testid="input-recherche-equipement"
                 />
               </div>
+              <CategoryFilter
+                availableCategories={availableCategories}
+                selectedCategories={selectedCategories}
+                onCategoriesChange={setSelectedCategories}
+              />
+              <ColumnSelector
+                columns={COLUMN_DEFINITIONS}
+                columnVisibility={columnVisibility}
+                onColumnToggle={setColumnVisibility}
+                onReset={resetToDefaults}
+              />
               <Button variant="outline" size="sm" data-testid="button-exporter">
                 <Download className="h-4 w-4 mr-2" />
                 {t('equipements.export')}
@@ -137,55 +274,21 @@ export default function Equipements() {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium">{t('equipements.id')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.category')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.model')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.year')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.plateNumber')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.fuelType')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.driver')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.gpsUnit')}/{t('equipements.meterUnit')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.hourlyRate')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.fuelConsumption')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.maintenanceCost')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.status')}</th>
-                  <th className="text-left p-3 font-medium">{t('equipements.actions')}</th>
+                  {visibleColumns.map(col => (
+                    <th key={col.id} className="text-left p-3 font-medium">
+                      {col.id === 'gpsUnit' ? (
+                        `${t('equipements.gpsUnit')}/${t('equipements.meterUnit')}`
+                      ) : (
+                        t(col.labelKey)
+                      )}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {equipements?.map((equipement) => (
                   <tr key={equipement.id} className="border-b hover-elevate" data-testid={`equipement-row-${equipement.id}`}>
-                    <td className="p-3">
-                      <div className="font-medium font-mono">{equipement.numeroSerie || equipement.nom}</div>
-                    </td>
-                    <td className="p-3 text-sm">{equipement.categorie || <span className="text-muted-foreground">-</span>}</td>
-                    <td className="p-3 text-sm">{equipement.modele || "-"}</td>
-                    <td className="p-3 text-sm">{equipement.year || <span className="text-muted-foreground">-</span>}</td>
-                    <td className="p-3 text-sm font-mono">{equipement.immatriculation || "-"}</td>
-                    <td className="p-3 text-sm">{equipement.fuelType || <span className="text-muted-foreground">-</span>}</td>
-                    <td className="p-3 text-sm">
-                      {equipement.operatorName || <span className="text-muted-foreground">-</span>}
-                    </td>
-                    <td className="p-3 text-xs text-muted-foreground">
-                      {equipement.gpsUnit && <div>GPS: {equipement.gpsUnit}</div>}
-                      {equipement.meterUnit && <div>Cpt: {equipement.meterUnit}</div>}
-                      {!equipement.gpsUnit && !equipement.meterUnit && "-"}
-                    </td>
-                    <td className="p-3 text-sm font-mono">
-                      {formatCurrency(equipement.hourlyRate, { locale: i18n.language })}
-                    </td>
-                    <td className="p-3 text-sm">
-                      {equipement.fuelConsumption !== undefined && equipement.fuelConsumption !== null ? `${equipement.fuelConsumption} L/100km` : <span className="text-muted-foreground">-</span>}
-                    </td>
-                    <td className="p-3 text-sm">
-                      {formatCurrency(equipement.maintenanceCost, { locale: i18n.language })}
-                    </td>
-                    <td className="p-3">{getStatutBadge(equipement.statut)}</td>
-                    <td className="p-3">
-                      <Button variant="ghost" size="sm" data-testid={`button-edit-${equipement.id}`}>
-                        {t('common.edit')}
-                      </Button>
-                    </td>
+                    {visibleColumns.map(col => renderCell(col.id, equipement))}
                   </tr>
                 ))}
               </tbody>

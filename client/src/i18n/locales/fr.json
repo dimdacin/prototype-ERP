@@ -192,7 +192,12 @@
       "transport_leger": "Transport léger",
       "specialises": "Spécialisés",
       "petite_mecanisation": "Petite mécanisation"
-    }
+    },
+    "columns": "Colonnes",
+    "selectColumns": "Sélectionner les colonnes",
+    "filterByCategory": "Filtrer par catégorie",
+    "searchCategory": "Rechercher une catégorie...",
+    "noCategoryFound": "Aucune catégorie trouvée"
   },
   "achats": {
     "title": "Achat/Stocks",
@@ -273,6 +278,9 @@
     "changeLanguage": "Changer de langue",
     "description": "Description",
     "actions": "Actions",
+    "reset": "Réinitialiser",
+    "clearAll": "Tout effacer",
+    "required": "obligatoire",
     "na": "Non applicable",
     "noData": "Aucune donnée"
   },

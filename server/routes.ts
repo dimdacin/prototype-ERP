@@ -261,6 +261,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Récupérer les métadonnées des colonnes Excel
+  app.get("/api/equipements/excel-columns", async (req, res) => {
+    try {
+      const { EQUIPEMENT_COLUMNS, DEFAULT_VISIBLE_COLUMNS } = await import('@shared/equipement-columns');
+      res.json({
+        columns: EQUIPEMENT_COLUMNS,
+        defaultVisible: DEFAULT_VISIBLE_COLUMNS
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch column metadata" });
+    }
+  });
+
   // Routes paramétriques (APRÈS les spécifiques)
   app.get("/api/equipements/:id", async (req, res) => {
     try {

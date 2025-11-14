@@ -25,6 +25,16 @@ Preferred communication style: Simple, everyday language.
 - **Schema**: Core tables include `users`, `chantiers`, `salaries`, `equipements`, `affectations_salaries`, `affectations_equipements`, `depenses`. Features include UUID primary keys, decimal precision for financial data, array columns, timestamp tracking, and status enums.
 - **Data Handling**: Excel file parsing using `xlsx` library, with auto-detection for column mappings and bulk insert capabilities.
 
+### Equipment Module Architecture (Excel-Driven)
+- **Dynamic Columns**: Equipment module uses 29 columns (28 Excel data columns + 1 UI actions column) sourced directly from Excel file structure, not hardcoded definitions.
+- **Column Metadata**: `shared/equipement-columns.ts` serves as single source of truth for column definitions, translations (FR/RU/RO), data types, formats, visibility defaults, and calculated column flags.
+- **Column API**: GET `/api/equipements/excel-columns` endpoint delivers column metadata to frontend for dynamic rendering and visibility management.
+- **Data Flow**: `Equipements.tsx` uses TanStack Query with query keys `['/api/equipements/excel-columns']` for metadata and `['/api/equipements']` for equipment data. Metadata loads first, triggers `useColumnVisibility` initialization via `useRef` guard, then table renders with `visibleColumns.map()` applying `formatColumnValue()` for each cell.
+- **Generic Formatting**: `client/src/lib/equipmentFormatter.ts` provides type-safe formatters respecting dataType (text, number, currency, date, percent), format specifications, and decimal precision. `getColumnValue()` returns `undefined` for calculated columns (no `dbField`), triggering placeholder rendering in `formatColumnValue()`.
+- **Calculated Columns**: Columns without database fields (e.g., hourly costs, balance values) display contextual placeholders ("À calculer", "Non disponible", "N/A") via `calculatedReason` flags ("pending_calculation", "requires_formula", "external_source"). These remain UI-only until calculation logic is implemented and corresponding DB columns are added.
+- **Column Visibility**: `client/src/hooks/useColumnVisibility.ts` manages per-column show/hide state with localStorage key `'equipements-column-visibility'`. On first load, checks localStorage; if absent, uses `defaultVisible` from metadata. Late initialization via `useRef(hasInitialized)` ensures state hydrates after async metadata arrives, preventing empty ColumnSelector on mount.
+- **Future Extensibility**: Calculated columns can be added to database incrementally as calculation logic is implemented, maintaining Excel structure parity for exports and audits. Current boundary: 12 columns have `dbField` (persisted), 16 columns are calculated/UI-only (pending implementation).
+
 ## External Dependencies
 
 - **Core Infrastructure**: Neon Database (PostgreSQL), Drizzle Kit (migrations).

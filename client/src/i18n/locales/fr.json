@@ -197,7 +197,13 @@
     "selectColumns": "Sélectionner les colonnes",
     "filterByCategory": "Filtrer par catégorie",
     "searchCategory": "Rechercher une catégorie...",
-    "noCategoryFound": "Aucune catégorie trouvée"
+    "noCategoryFound": "Aucune catégorie trouvée",
+    "editTitle": "Modifier l'équipement",
+    "editDescription": "Modifiez les informations de cet équipement",
+    "editSuccess": "Équipement modifié avec succès",
+    "editError": "Erreur lors de la modification",
+    "selectDriver": "Sélectionner un conducteur",
+    "noDriver": "Aucun conducteur"
   },
   "achats": {
     "title": "Achat/Stocks",
@@ -282,7 +288,9 @@
     "clearAll": "Tout effacer",
     "required": "obligatoire",
     "na": "Non applicable",
-    "noData": "Aucune donnée"
+    "noData": "Aucune donnée",
+    "success": "Succès",
+    "error": "Erreur"
   },
   "languages": {
     "fr": "Français",

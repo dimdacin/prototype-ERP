@@ -197,7 +197,13 @@
     "selectColumns": "Selectați coloanele",
     "filterByCategory": "Filtrare după categorie",
     "searchCategory": "Căutare categorie...",
-    "noCategoryFound": "Categorie negăsită"
+    "noCategoryFound": "Categorie negăsită",
+    "editTitle": "Modificare echipament",
+    "editDescription": "Modificați informațiile acestui echipament",
+    "editSuccess": "Echipament modificat cu succes",
+    "editError": "Eroare la modificare",
+    "selectDriver": "Selectați șoferul",
+    "noDriver": "Fără șofer"
   },
   "achats": {
     "title": "Achiziții/Stocuri",

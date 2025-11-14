@@ -8,6 +8,7 @@ import type { Equipement } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
 import ImportEquipmentDialog from "@/components/ImportEquipmentDialog";
+import EditEquipmentDialog from "@/components/EditEquipmentDialog";
 import CategoryFamilyCards from "@/components/CategoryFamilyCards";
 import { formatCurrency } from "@/lib/utils";
 import ColumnSelector from "@/components/ColumnSelector";
@@ -171,9 +172,7 @@ export default function Equipements() {
       case 'actions':
         return (
           <td className="p-3" key="actions">
-            <Button variant="ghost" size="sm" data-testid={`button-edit-${equipement.id}`}>
-              {t('common.edit')}
-            </Button>
+            <EditEquipmentDialog equipment={equipement} />
           </td>
         );
       default:

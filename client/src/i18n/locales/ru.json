@@ -197,7 +197,13 @@
     "selectColumns": "Выбрать колонки",
     "filterByCategory": "Фильтр по категории",
     "searchCategory": "Поиск категории...",
-    "noCategoryFound": "Категория не найдена"
+    "noCategoryFound": "Категория не найдена",
+    "editTitle": "Изменить оборудование",
+    "editDescription": "Измените информацию об этом оборудовании",
+    "editSuccess": "Оборудование успешно изменено",
+    "editError": "Ошибка при изменении",
+    "selectDriver": "Выбрать водителя",
+    "noDriver": "Без водителя"
   },
   "achats": {
     "title": "Закупки/Запасы",

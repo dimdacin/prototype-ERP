@@ -21,8 +21,12 @@ export interface EquipementColumnDef {
   format?: 'currency' | 'percentage' | 'decimal' | 'integer';
   /** Nombre de décimales pour l'affichage */
   decimals?: number;
-  /** Colonne calculée (non stockée en DB) */
-  calculated?: boolean;
+  /** Colonne calculée (non stockée en DB) avec raison */
+  calculatedReason?: 'pending_calculation' | 'formula_based' | 'external_data';
+  /** Colonne UI uniquement (pas de données métier) */
+  uiOnly?: boolean;
+  /** Visible par défaut */
+  defaultVisible?: boolean;
 }
 
 /**
@@ -36,51 +40,58 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     excelHeader: 'id',
     dbField: 'numeroSerie',
     dataType: 'text',
-    translationKey: 'equipements.columns.id',
+    translationKey: 'equipements.id',
     mandatory: true,
+    defaultVisible: true,
   },
   {
     id: 'category',
     excelHeader: 'category',
     dbField: 'categorie',
     dataType: 'text',
-    translationKey: 'equipements.columns.category',
+    translationKey: 'equipements.category',
+    defaultVisible: true,
   },
   {
     id: 'model',
     excelHeader: 'model',
     dbField: 'modele',
     dataType: 'text',
-    translationKey: 'equipements.columns.model',
+    translationKey: 'equipements.model',
+    defaultVisible: true,
   },
   {
     id: 'plate_number',
     excelHeader: 'plate_number',
     dbField: 'immatriculation',
     dataType: 'text',
-    translationKey: 'equipements.columns.plateNumber',
+    translationKey: 'equipements.plateNumber',
+    defaultVisible: true,
   },
   {
     id: 'year',
     excelHeader: 'year',
     dbField: 'year',
     dataType: 'number',
-    translationKey: 'equipements.columns.year',
+    translationKey: 'equipements.year',
     format: 'integer',
+    defaultVisible: true,
   },
   {
     id: 'status',
     excelHeader: 'status',
     dbField: 'statut',
     dataType: 'enum',
-    translationKey: 'equipements.columns.status',
+    translationKey: 'equipements.status',
+    defaultVisible: true,
   },
   {
     id: 'operator_name',
     excelHeader: 'operator_name',
     dbField: 'operatorName',
     dataType: 'text',
-    translationKey: 'equipements.columns.driver',
+    translationKey: 'equipements.driver',
+    defaultVisible: true,
   },
   
   // Colonnes techniques
@@ -89,21 +100,24 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     excelHeader: 'gps_unit',
     dbField: 'gpsUnit',
     dataType: 'text',
-    translationKey: 'equipements.columns.gpsUnit',
+    translationKey: 'equipements.gpsUnit',
+    defaultVisible: false,
   },
   {
     id: 'meter_unit',
     excelHeader: 'meter_unit',
     dbField: 'meterUnit',
     dataType: 'text',
-    translationKey: 'equipements.columns.meterUnit',
+    translationKey: 'equipements.meterUnit',
+    defaultVisible: false,
   },
   {
     id: 'fuel_type',
     excelHeader: 'fuel_type',
     dbField: 'fuelType',
     dataType: 'text',
-    translationKey: 'equipements.columns.fuelType',
+    translationKey: 'equipements.fuelType',
+    defaultVisible: false,
   },
   
   // Colonnes financières - Taux horaires
@@ -112,27 +126,30 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     excelHeader: 'hourly_sal_rate_lei',
     dbField: 'hourlyRate',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.hourlySalRateLei',
+    translationKey: 'equipements.hourlySalRateLei',
     format: 'currency',
     decimals: 2,
+    defaultVisible: true,
   },
   {
     id: 'hourly_sal_allin_lei',
     excelHeader: 'hourly_sal_allin_lei',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.hourlySalAllinLei',
+    translationKey: 'equipements.hourlySalAllinLei',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'total_salary_lei_hut',
     excelHeader: 'total_salary_lei_hut',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.totalSalaryLeiHut',
+    translationKey: 'equipements.totalSalaryLeiHut',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   
   // Colonnes de consommation et maintenance
@@ -141,18 +158,20 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     excelHeader: 'fuel_consumption_100km',
     dbField: 'fuelConsumption',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.fuelConsumption',
+    translationKey: 'equipements.fuelConsumption',
     format: 'decimal',
     decimals: 2,
+    defaultVisible: true,
   },
   {
     id: 'annual_maintenance_cost_lei',
     excelHeader: 'annual_maintenance_cost_lei',
     dbField: 'maintenanceCost',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.maintenanceCost',
+    translationKey: 'equipements.maintenanceCost',
     format: 'currency',
     decimals: 2,
+    defaultVisible: true,
   },
   
   // Colonnes de coûts d'utilisation
@@ -160,37 +179,41 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     id: 'usage_workcost_lei_h',
     excelHeader: 'usage_workcost_lei_h',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.usageWorkcostLeiH',
+    translationKey: 'equipements.usageWorkcostLeiH',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'usage_cost_allin_h',
     excelHeader: 'usage_cost_allin_h',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.usageCostAllinH',
+    translationKey: 'equipements.usageCostAllinH',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'usage_cost_allin_100km',
     excelHeader: 'usage_cost_allin_100km',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.usageCostAllin100km',
+    translationKey: 'equipements.usageCostAllin100km',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'fuel_price_lei_l',
     excelHeader: 'fuel_price_lei_l',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.fuelPriceLeiL',
+    translationKey: 'equipements.fuelPriceLeiL',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'external_data',
+    defaultVisible: false,
   },
   
   // Colonnes de dépréciation
@@ -198,54 +221,60 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     id: 'balance_value_lei',
     excelHeader: 'balance_value_lei',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.balanceValueLei',
+    translationKey: 'equipements.balanceValueLei',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'useful_life_years',
     excelHeader: 'useful_life_years',
     dataType: 'number',
-    translationKey: 'equipements.columns.usefulLifeYears',
+    translationKey: 'equipements.usefulLifeYears',
     format: 'integer',
-    calculated: true,
+    calculatedReason: 'pending_calculation',
+    defaultVisible: false,
   },
   {
     id: 'residual_value_lei',
     excelHeader: 'residual_value_lei',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.residualValueLei',
+    translationKey: 'equipements.residualValueLei',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'depreciable_value_lei',
     excelHeader: 'depreciable_value_lei',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.depreciableValueLei',
+    translationKey: 'equipements.depreciableValueLei',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'annual_depreciation_rate',
     excelHeader: 'annual_depreciation_rate',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.annualDepreciationRate',
+    translationKey: 'equipements.annualDepreciationRate',
     format: 'percentage',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   {
     id: 'total_depreciation_lei',
     excelHeader: 'total_depreciation_lei',
     dataType: 'decimal',
-    translationKey: 'equipements.columns.totalDepreciationLei',
+    translationKey: 'equipements.totalDepreciationLei',
     format: 'currency',
     decimals: 2,
-    calculated: true,
+    calculatedReason: 'formula_based',
+    defaultVisible: false,
   },
   
   // Colonne notes
@@ -253,23 +282,27 @@ export const EQUIPEMENT_COLUMNS: EquipementColumnDef[] = [
     id: 'notes',
     excelHeader: 'notes',
     dataType: 'text',
-    translationKey: 'equipements.columns.notes',
-    calculated: true,
+    translationKey: 'equipements.notes',
+    calculatedReason: 'pending_calculation',
+    defaultVisible: false,
+  },
+  
+  // Colonne UI uniquement (actions)
+  {
+    id: 'actions',
+    excelHeader: '',
+    dataType: 'text',
+    translationKey: 'equipements.actions',
+    uiOnly: true,
+    mandatory: true,
+    defaultVisible: true,
   },
 ];
 
 /**
  * Colonnes visibles par défaut au chargement initial
+ * (dérivé automatiquement des colonnes avec defaultVisible: true)
  */
-export const DEFAULT_VISIBLE_COLUMNS = [
-  'id',
-  'category',
-  'model',
-  'plate_number',
-  'year',
-  'operator_name',
-  'hourly_sal_rate_lei',
-  'fuel_consumption_100km',
-  'annual_maintenance_cost_lei',
-  'status',
-];
+export const DEFAULT_VISIBLE_COLUMNS = EQUIPEMENT_COLUMNS
+  .filter(col => col.defaultVisible)
+  .map(col => col.id);

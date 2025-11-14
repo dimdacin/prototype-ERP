@@ -14,6 +14,8 @@ import { formatCurrency } from "@/lib/utils";
 import ColumnSelector from "@/components/ColumnSelector";
 import CategoryFilter from "@/components/CategoryFilter";
 import { useColumnVisibility, type ColumnDef } from "@/hooks/useColumnVisibility";
+import type { EquipementColumnDef } from "@shared/equipement-columns";
+import { formatColumnValue, getColumnValue } from "@/lib/equipmentFormatter";
 
 const FAMILY_CATEGORIES: Record<string, string[]> = {
   engins_chantier: ["Compactoare", "Incarcatoare frontale", "Finisoare", "Excavatoare", "Autogredere", "Tractoare", "Freze"],
@@ -23,34 +25,40 @@ const FAMILY_CATEGORIES: Record<string, string[]> = {
   petite_mecanisation: ["м. механизация"]
 };
 
-const COLUMN_DEFINITIONS: ColumnDef[] = [
-  { id: 'id', labelKey: 'equipements.id', mandatory: true, defaultVisible: true },
-  { id: 'category', labelKey: 'equipements.category', defaultVisible: true },
-  { id: 'model', labelKey: 'equipements.model', defaultVisible: true },
-  { id: 'year', labelKey: 'equipements.year', defaultVisible: true },
-  { id: 'plateNumber', labelKey: 'equipements.plateNumber', defaultVisible: true },
-  { id: 'fuelType', labelKey: 'equipements.fuelType', defaultVisible: false },
-  { id: 'driver', labelKey: 'equipements.driver', defaultVisible: true },
-  { id: 'gpsUnit', labelKey: 'equipements.gpsUnit', defaultVisible: false },
-  { id: 'hourlyRate', labelKey: 'equipements.hourlyRate', defaultVisible: true },
-  { id: 'fuelConsumption', labelKey: 'equipements.fuelConsumption', defaultVisible: false },
-  { id: 'maintenanceCost', labelKey: 'equipements.maintenanceCost', defaultVisible: false },
-  { id: 'status', labelKey: 'equipements.status', defaultVisible: true },
-  { id: 'actions', labelKey: 'equipements.actions', mandatory: true, defaultVisible: true },
-];
-
 export default function Equipements() {
   const { t, i18n } = useTranslation();
   const [selectedFamily, setSelectedFamily] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  
+  // Charger les métadonnées des colonnes Excel
+  const { data: columnMetadata, isLoading: isLoadingColumns } = useQuery<{
+    columns: EquipementColumnDef[];
+    defaultVisible: string[];
+  }>({
+    queryKey: ["/api/equipements/excel-columns"],
+  });
+
+  // Convertir les colonnes Excel en ColumnDef pour useColumnVisibility
+  const columnDefinitions: ColumnDef[] = useMemo(() => {
+    if (!columnMetadata) return [];
+    return columnMetadata.columns.map(col => ({
+      id: col.id,
+      labelKey: col.translationKey,
+      mandatory: col.mandatory,
+      defaultVisible: col.defaultVisible,
+    }));
+  }, [columnMetadata]);
+
   const { columnVisibility, setColumnVisibility, resetToDefaults } = useColumnVisibility(
-    COLUMN_DEFINITIONS, 
+    columnDefinitions, 
     'equipements-column-visibility'
   );
   
-  const { data: allEquipements, isLoading } = useQuery<Equipement[]>({
+  const { data: allEquipements, isLoading: isLoadingEquipements } = useQuery<Equipement[]>({
     queryKey: ["/api/equipements"],
   });
+
+  const isLoading = isLoadingColumns || isLoadingEquipements;
 
   const availableCategories = useMemo(() => {
     if (!allEquipements) return [];
@@ -103,84 +111,46 @@ export default function Equipements() {
     }
   };
 
-  const renderCell = (columnId: string, equipement: Equipement) => {
-    switch (columnId) {
-      case 'id':
-        return (
-          <td className="p-3" key="id">
-            <div className="font-medium font-mono">{equipement.numeroSerie || equipement.nom}</div>
-          </td>
-        );
-      case 'category':
-        return (
-          <td className="p-3 text-sm" key="category">
-            {equipement.categorie || <span className="text-muted-foreground">-</span>}
-          </td>
-        );
-      case 'model':
-        return <td className="p-3 text-sm" key="model">{equipement.modele || "-"}</td>;
-      case 'year':
-        return (
-          <td className="p-3 text-sm" key="year">
-            {equipement.year || <span className="text-muted-foreground">-</span>}
-          </td>
-        );
-      case 'plateNumber':
-        return <td className="p-3 text-sm font-mono" key="plateNumber">{equipement.immatriculation || "-"}</td>;
-      case 'fuelType':
-        return (
-          <td className="p-3 text-sm" key="fuelType">
-            {equipement.fuelType || <span className="text-muted-foreground">-</span>}
-          </td>
-        );
-      case 'driver':
-        return (
-          <td className="p-3 text-sm" key="driver">
-            {equipement.operatorName || <span className="text-muted-foreground">-</span>}
-          </td>
-        );
-      case 'gpsUnit':
-        return (
-          <td className="p-3 text-xs text-muted-foreground" key="gpsUnit">
-            {equipement.gpsUnit && <div>GPS: {equipement.gpsUnit}</div>}
-            {equipement.meterUnit && <div>Cpt: {equipement.meterUnit}</div>}
-            {!equipement.gpsUnit && !equipement.meterUnit && "-"}
-          </td>
-        );
-      case 'hourlyRate':
-        return (
-          <td className="p-3 text-sm font-mono" key="hourlyRate">
-            {formatCurrency(equipement.hourlyRate, { locale: i18n.language })}
-          </td>
-        );
-      case 'fuelConsumption':
-        return (
-          <td className="p-3 text-sm" key="fuelConsumption">
-            {equipement.fuelConsumption !== undefined && equipement.fuelConsumption !== null 
-              ? `${equipement.fuelConsumption} L/100km` 
-              : <span className="text-muted-foreground">-</span>}
-          </td>
-        );
-      case 'maintenanceCost':
-        return (
-          <td className="p-3 text-sm" key="maintenanceCost">
-            {formatCurrency(equipement.maintenanceCost, { locale: i18n.language })}
-          </td>
-        );
-      case 'status':
-        return <td className="p-3" key="status">{getStatutBadge(equipement.statut)}</td>;
-      case 'actions':
-        return (
-          <td className="p-3" key="actions">
-            <EditEquipmentDialog equipment={equipement} />
-          </td>
-        );
-      default:
-        return null;
+  const renderCell = (column: EquipementColumnDef, equipement: Equipement) => {
+    // Traitement spécial pour les colonnes UI ou avec rendu personnalisé
+    if (column.id === 'status') {
+      return <td className="p-3" key="status">{getStatutBadge(equipement.statut)}</td>;
     }
+    
+    if (column.id === 'actions') {
+      return (
+        <td className="p-3" key="actions">
+          <EditEquipmentDialog equipment={equipement} />
+        </td>
+      );
+    }
+
+    // Rendu générique pour toutes les autres colonnes
+    const value = getColumnValue(equipement, column);
+    const formattedValue = formatColumnValue(value, column, i18n.language);
+    
+    // Styling selon le type de colonne
+    const cellClass = column.format === 'currency' || column.format === 'decimal' 
+      ? "p-3 text-sm font-mono" 
+      : "p-3 text-sm";
+    
+    // Afficher les colonnes calculées avec un style spécial
+    const isCalculated = !!column.calculatedReason;
+    const displayValue = isCalculated && (value === null || value === undefined || value === '') 
+      ? <span className="text-muted-foreground italic">{formattedValue}</span>
+      : formattedValue;
+
+    return (
+      <td className={cellClass} key={column.id}>
+        {displayValue}
+      </td>
+    );
   };
 
-  const visibleColumns = COLUMN_DEFINITIONS.filter(col => columnVisibility[col.id] !== false);
+  const visibleColumns = useMemo(() => {
+    if (!columnMetadata) return [];
+    return columnMetadata.columns.filter(col => columnVisibility[col.id] !== false);
+  }, [columnMetadata, columnVisibility]);
 
   if (isLoading) {
     return (
@@ -188,6 +158,17 @@ export default function Equipements() {
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-muted rounded w-1/4"></div>
           <div className="h-64 bg-muted rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Ne pas rendre si les colonnes ne sont pas chargées
+  if (!columnMetadata) {
+    return (
+      <div className="p-6">
+        <div className="text-center py-12 text-muted-foreground">
+          <p>Erreur de chargement des colonnes</p>
         </div>
       </div>
     );
@@ -256,7 +237,7 @@ export default function Equipements() {
                 onCategoriesChange={setSelectedCategories}
               />
               <ColumnSelector
-                columns={COLUMN_DEFINITIONS}
+                columns={columnDefinitions}
                 columnVisibility={columnVisibility}
                 onColumnToggle={setColumnVisibility}
                 onReset={resetToDefaults}
@@ -275,11 +256,7 @@ export default function Equipements() {
                 <tr className="border-b">
                   {visibleColumns.map(col => (
                     <th key={col.id} className="text-left p-3 font-medium">
-                      {col.id === 'gpsUnit' ? (
-                        `${t('equipements.gpsUnit')}/${t('equipements.meterUnit')}`
-                      ) : (
-                        t(col.labelKey)
-                      )}
+                      {t(col.translationKey)}
                     </th>
                   ))}
                 </tr>
@@ -287,7 +264,7 @@ export default function Equipements() {
               <tbody>
                 {equipements?.map((equipement) => (
                   <tr key={equipement.id} className="border-b hover-elevate" data-testid={`equipement-row-${equipement.id}`}>
-                    {visibleColumns.map(col => renderCell(col.id, equipement))}
+                    {visibleColumns.map(col => renderCell(col, equipement))}
                   </tr>
                 ))}
               </tbody>

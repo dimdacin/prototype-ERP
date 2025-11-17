@@ -129,8 +129,6 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold mb-4">Chantiers en cours</h2>
             <ProjectsTable
               projects={projects}
-              onView={(id) => console.log('View project:', id)}
-              onEdit={(id) => console.log('Edit project:', id)}
             />
           </div>
 

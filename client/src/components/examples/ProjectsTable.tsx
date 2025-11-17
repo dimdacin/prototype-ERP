@@ -34,8 +34,6 @@ export default function ProjectsTableExample() {
   return (
     <ProjectsTable
       projects={projects}
-      onView={(id) => console.log('View project:', id)}
-      onEdit={(id) => console.log('Edit project:', id)}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Users, Wrench, Calendar, BarChart3, ShoppingCart, Wallet, FileText } from "lucide-react";
+import { LayoutDashboard, Building2, Users, Wrench, Calendar, BarChart3, ShoppingCart, Wallet, FileText, Zap } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -46,6 +46,12 @@ export function AppSidebar() {
       url: "/planning",
       icon: Calendar,
       key: "planning"
+    },
+    {
+      title: "Plan de Charge",
+      url: "/plan-de-charge",
+      icon: Zap,
+      key: "plan-de-charge"
     },
     {
       title: t('nav.achats'),

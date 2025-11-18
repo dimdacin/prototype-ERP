@@ -10,6 +10,8 @@ import LanguageSelector from "@/components/LanguageSelector";
 import Dashboard from "@/pages/Dashboard";
 import Chantiers from "@/pages/Chantiers";
 import ChantierDetails from "@/pages/ChantierDetails";
+import Planning from "@/pages/Planning";
+import PlanDeCharge from "@/pages/PlanDeCharge";
 import Salaries from "@/pages/Salaries";
 import Equipements from "@/pages/Equipements";
 import Achats from "@/pages/Achats";
@@ -29,7 +31,8 @@ function Router() {
       <Route path="/chantiers" component={Chantiers} />
       <Route path="/salaries" component={Salaries} />
       <Route path="/equipements" component={Equipements} />
-      <Route path="/planning" component={() => <div className="p-6"><h1 className="text-2xl font-semibold">{t('nav.planning')} - {t('common.inDevelopment')}</h1></div>} />
+      <Route path="/planning" component={Planning} />
+      <Route path="/plan-de-charge" component={PlanDeCharge} />
       <Route path="/achats" component={Achats} />
       <Route path="/finances" component={Finances} />
       <Route path="/budgets" component={() => <div className="p-6"><h1 className="text-2xl font-semibold">{t('nav.budgets')} - {t('common.inDevelopment')}</h1></div>} />

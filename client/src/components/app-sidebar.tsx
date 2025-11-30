@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Users, Wrench, Calendar, BarChart3, ShoppingCart, Wallet, FileText, Zap } from "lucide-react";
+import { LayoutDashboard, Building2, Users, Wrench, Calendar, BarChart3, ShoppingCart, Wallet, FileText, Zap, Factory } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -40,6 +40,12 @@ export function AppSidebar() {
       url: "/equipements",
       icon: Wrench,
       key: "equipements"
+    },
+    {
+      title: t('nav.usines'),
+      url: "/usines",
+      icon: Factory,
+      key: "usines"
     },
     {
       title: t('nav.planning'),

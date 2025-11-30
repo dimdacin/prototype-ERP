@@ -9,7 +9,8 @@
     "finances": "Finances/Trésorerie",
     "budgets": "Budgets",
     "documentation": "Documentation",
-    "erpGestion": "ERP Gestion"
+    "erpGestion": "ERP Gestion",
+    "usines": "Usines"
   },
   "dashboard": {
     "title": "Tableau de bord",

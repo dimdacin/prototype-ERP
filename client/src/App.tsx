@@ -12,8 +12,9 @@ import Chantiers from "@/pages/Chantiers";
 import ChantierDetails from "@/pages/ChantierDetails";
 import Planning from "@/pages/Planning";
 import PlanDeCharge from "@/pages/PlanDeCharge";
-import Salaries from "@/pages/Salaries";
+import Salaries from "@/pages/Employes";
 import Equipements from "@/pages/Equipements";
+import SitesProduction from "@/pages/SitesProduction";
 import Achats from "@/pages/Achats";
 import Finances from "@/pages/Finances";
 import Documentation from "@/pages/Documentation";
@@ -29,8 +30,9 @@ function Router() {
       <Route path="/" component={Dashboard} />
       <Route path="/chantiers/:id" component={ChantierDetails} />
       <Route path="/chantiers" component={Chantiers} />
-      <Route path="/salaries" component={Salaries} />
+      <Route path="/employes" component={Salaries} />
       <Route path="/equipements" component={Equipements} />
+      <Route path="/sites-production" component={SitesProduction} />
       <Route path="/planning" component={Planning} />
       <Route path="/plan-de-charge" component={PlanDeCharge} />
       <Route path="/achats" component={Achats} />
